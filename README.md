@@ -1,6 +1,6 @@
 # BigLab 2 - Class: 2022 AW1
 
-## Team name: TEAM_NAME
+## Team name: CSMS
 
 Team members:
 * s295829 Acquaro Claudio
