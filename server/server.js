@@ -9,7 +9,7 @@ const PORT = 3001;
 const app = new express();
 
 app.use(morgan('dev'));
-app.use(express.json);
+app.use(express.json());
 
 /** APIs **/
 
