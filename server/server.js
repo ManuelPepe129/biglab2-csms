@@ -1,5 +1,6 @@
 'use strict'
 
+const { response } = require('express');
 const express = require('express');
 const morgan = require('morgan');
 const dao = require('./dao');
@@ -30,6 +31,36 @@ app.delete('/api/films/:id', async (request, response) => {
     }
 });
 
+//ADD /api/films
+app.post('/api/films',  async(request, response) => {
+    const film ={
+        title: request.body.title,
+        favorite: request.body.favorite,
+        watchdate: request.body.watchdate,
+        rating: request.body.rating,
+    };
+
+    try{
+        await dao.addFilm(film);
+        response.status(201).end();
+    }
+    catch (err) {
+        response.status(503).json({ error: `Database error during the creation of film ${film.title}.` });
+    }
+});
+
+//UPDATE /api/films/:id
+app.put('/api/films/:id',  async(request, response)=>{
+    const film = request.body;
+
+    try{
+        await dao.updateFilm(film);
+        response.status(200).end();
+    }
+    catch (err) {
+        response.status(503).json({ error: `Database error during the update of film ${request.params.id}.` });
+    }
+});
 
 
 
