@@ -1,0 +1,31 @@
+.fixedButton{
+    position: fixed;
+    bottom: 20px;
+    right: 20px; 
+    
+}
+.red{
+    color: red;
+}
+.edit{
+    border-color: green;
+}
+.delete{
+    border-color: red;
+}
+
+.sideBar{
+    height: 695px;
+    background-color:#ECEFF1;
+}
+
+
+.list-group-item.active {
+
+    background-color: #01579B;
+    border-color:#01579B ;
+    
+}
+
+
+
