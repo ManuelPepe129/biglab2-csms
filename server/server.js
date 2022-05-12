@@ -90,8 +90,8 @@ app.put('/api/films/:id',  async(request, response)=>{
     }
 });
 
-//UPDATEFILMFAVORITE /api/films/:id&:favorite
-app.put('/api/films/:id&:favorite',  async(request, response)=>{
+//UPDATEFILMFAVORITE /api/films/:id/:favorite
+app.put('/api/films/:id/:favorite',  async(request, response)=>{
     try{
         await dao.updateFilmFavorite(request.params.id, request.params.favorite);
         response.status(200).end();
