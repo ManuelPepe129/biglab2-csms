@@ -25,10 +25,13 @@ exports.listFilms = () => {
 //add new film
 exports.addFilm = (film) => {
     return new Promise((resolve, reject) => {
-        const sql = "INSERT INTO films(title, favorite, watchdate, rating) values (?,?,?,?)";
-        db.run(sql, [film.title, film.favorite, film.watchdate, film.rating], function (err) {
-            if (err) reject(err);
-            else resolve(this.id);
+        const sql = "INSERT INTO films(title, favorite, watchdate, rating, user) values (?,?,?,?,?)";
+        db.run(sql, [film.title, film.favorite, film.watchdate, film.rating, film.user], function (err) {
+            if (err){ reject(err);
+                return;
+
+            }else resolve(this.id);
+            
         })
     });
 }
@@ -36,10 +39,13 @@ exports.addFilm = (film) => {
 //update film
 exports.updateFilm = (film) => {
     return new Promise((resolve, reject) => {
-        const sql = "UPDATE film SET title=?, favorite=?, watchdate=?, rating=? WHERE id=?";
+        const sql = "UPDATE films SET title=?, favorite=?, watchdate=?, rating=? WHERE id=?";
         db.run(sql, [film.title, film.favorite, film.watchdate, film.rating, film.id], function (err) {
-            if (err) reject(err);
-            else resolve(this.id);
+            if (err){ reject(err);
+                return;
+
+            }
+             resolve(this.id);
         })
     });
 }

@@ -38,6 +38,7 @@ app.post('/api/films',  async(request, response) => {
         favorite: request.body.favorite,
         watchdate: request.body.watchdate,
         rating: request.body.rating,
+        user: 0,
     };
 
     try{
@@ -51,7 +52,15 @@ app.post('/api/films',  async(request, response) => {
 
 //UPDATE /api/films/:id
 app.put('/api/films/:id',  async(request, response)=>{
-    const film = request.body;
+    const film ={
+        id: request.params.id,
+        title: request.body.title,
+        favorite: request.body.favorite,
+        watchdate: request.body.watchdate,
+        rating: request.body.rating,
+    }; 
+
+    console.log(film);
 
     try{
         await dao.updateFilm(film);
