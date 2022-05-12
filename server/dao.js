@@ -76,7 +76,7 @@ exports.listBestRated = () => {
 //seenLastMonth
 exports.listSeenLastMonth = () => {
     return new Promise((resolve, reject) => {
-        const sql = "SELECT * FROM FILMS WHERE datediff(now(), watchdate)< 30" ;
+        const sql = "SELECT * FROM FILMS WHERE julianday(DATE('now'))- julianday(watchdate) < 30" ;
         db.all(sql, [], (err, rows) => {
             if (err)
                 reject(err);
