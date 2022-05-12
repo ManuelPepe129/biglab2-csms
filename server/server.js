@@ -14,13 +14,23 @@ app.use(express.json());
 /** APIs **/
 
 //GET /api/films
-app.get('/api/films', (request, response) =>{
+app.get('/api/films', (request, response) => {
     dao.listFilms()
-    .then(films => response.json(films))
-    .catch(()=>response.status(500).end());
+        .then(films => response.json(films))
+        .catch(() => response.status(500).end());
+});
+
+//DELETE /api/films/:id
+app.delete('/api/films/:id', async (request, response) => {
+    try {
+        await dao.deleteFilm(request.params.id);
+        response.status(204).end();
+    } catch (err) {
+        response.status(503).json({ error: `Database error during the deletion of film ${request.params.id}.` });
+    }
 });
 
 
 
 
-app.listen(PORT, ()=>console.log(`Server running on http://localhost:${PORT}/`));
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}/`));
