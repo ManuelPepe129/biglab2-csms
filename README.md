@@ -3,10 +3,10 @@
 ## Team name: TEAM_NAME
 
 Team members:
-* s123456 LASTNAME FIRSTNAME
-* s123456 LASTNAME FIRSTNAME 
-* s123456 LASTNAME FIRSTNAME
-* s123456 LASTNAME FIRSTNAME (delete line if not needed)
+* s295829 Acquaro Claudio
+* s302948 Matranga Sonia
+* s303393 Belloni Sofia
+* s281221 Pepe Manuel 
 
 ## Instructions
 
