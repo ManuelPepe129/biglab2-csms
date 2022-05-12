@@ -21,6 +21,25 @@ app.get('/api/films', (request, response) => {
         .catch(() => response.status(500).end());
 });
 
+
+
+//GETFILMBYID /api/films/:id
+app.get('/api/films/:id', async (request, response) => {
+    try {
+
+        const result =  await dao.listFilmByID(request.params.id);
+
+        if(result.error)
+          response.status(404).json(result);
+        else 
+        response.json(result);
+    } catch (err) {
+        response.status(500).end();
+    }
+});
+
+
+
 //DELETE /api/films/:id
 app.delete('/api/films/:id', async (request, response) => {
     try {
@@ -71,6 +90,16 @@ app.put('/api/films/:id',  async(request, response)=>{
     }
 });
 
+//UPDATEFILMFAVORITE /api/films/:id&:favorite
+app.put('/api/films/:id&:favorite',  async(request, response)=>{
+    try{
+        await dao.updateFilmFavorite(request.params.id, request.params.favorite);
+        response.status(200).end();
+    }
+    catch (err) {
+        response.status(503).json({ error: `Database error during the update of film ${request.params.id}.` });
+    }
+});
 
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}/`));
