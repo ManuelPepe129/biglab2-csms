@@ -1,9 +1,11 @@
 'use strict'
 
 const { response } = require('express');
+const dayjs = require('dayjs');
 const express = require('express');
 const morgan = require('morgan');
 const dao = require('./dao');
+const {check, validationResult} = require('express-validator'); // validation middleware
 
 
 const PORT = 3001;
@@ -15,7 +17,7 @@ app.use(express.json());
 
 /** APIs **/
 
-//GET /api/films
+//GETALL /api/films
 app.get('/api/films', (request, response) => {
     dao.listFilms()
         .then(films => response.json(films))
@@ -40,7 +42,7 @@ app.get('/api/films/:id', async (request, response) => {
 });
 
 
-//GETFAVORITES /api/favorites
+// FILTER GETFAVORITES /api/favorites
 app.get('/api/favorites', async (request, response) => {
     try {
 
@@ -55,7 +57,7 @@ app.get('/api/favorites', async (request, response) => {
     }
 });
 
-//BESTRATED /api/bestrated
+// FILTER BESTRATED /api/bestrated
 app.get('/api/bestRated', async (request, response) => {
     try {
 
@@ -70,7 +72,7 @@ app.get('/api/bestRated', async (request, response) => {
     }
 });
 
-//SEENLASTMONTH /api/seenLastMonth
+// FILTER SEENLASTMONTH /api/seenLastMonth
 app.get('/api/seenLastMonth', async (request, response) => {
     try {
 
@@ -85,7 +87,7 @@ app.get('/api/seenLastMonth', async (request, response) => {
     }
 });
 
-//UNSEEN /api/unseen
+// FILTER UNSEEN /api/unseen
 app.get('/api/unseen', async (request, response) => {
     try {
 
@@ -113,7 +115,16 @@ app.delete('/api/films/:id', async (request, response) => {
 });
 
 //ADD /api/films
-app.post('/api/films',  async(request, response) => {
+app.post('/api/films',[
+    check('favorite').isInt({min: 0, max: 1}),
+    check('rating').isInt({min: 0, max: 5}),
+    check('watchdate').isBefore(dayjs().format('YYYY-MM-DD')),
+  ],  async(request, response) => {
+    const errors = validationResult(request);
+    if(!errors.isEmpty()) {
+        return response.status(422).json({errors: errors.array()});
+    } 
+    
     const film ={
         title: request.body.title,
         favorite: request.body.favorite,
@@ -131,8 +142,28 @@ app.post('/api/films',  async(request, response) => {
     }
 });
 
+/*
+
+REQBIN TEST:
+
+ {"title":"changed",
+ "favorite":"1",
+ "watchdate":"2022-03-20",
+ "rating":"4"
+} */
+
 //UPDATE /api/films/:id
-app.put('/api/films/:id',  async(request, response)=>{
+app.put('/api/films/:id',  [
+    check('favorite').isInt({min: 0, max: 1}),
+    check('rating').isInt({min: 0, max: 5}),
+    check('watchdate').isBefore(dayjs().format('YYYY-MM-DD')),
+  ], async(request, response)=>{
+
+    const errors = validationResult(request);
+    if(!errors.isEmpty()) {
+        return response.status(422).json({errors: errors.array()});
+    } 
+
     const film ={
         id: request.params.id,
         title: request.body.title,
@@ -141,7 +172,7 @@ app.put('/api/films/:id',  async(request, response)=>{
         rating: request.body.rating,
     }; 
 
-    console.log(film);
+    
 
     try{
         await dao.updateFilm(film);
@@ -153,7 +184,13 @@ app.put('/api/films/:id',  async(request, response)=>{
 });
 
 //UPDATEFILMFAVORITE /api/films/:id/:favorite
-app.put('/api/films/:id/:favorite',  async(request, response)=>{
+app.put('/api/films/:id/:favorite', [
+    check('favorite').isInt({min: 0, max: 1})
+], async(request, response)=>{
+    const errors = validationResult(request);
+    if(!errors.isEmpty()) {
+        return response.status(422).json({errors: errors.array()});
+    } 
     try{
         await dao.updateFilmFavorite(request.params.id, request.params.favorite);
         response.status(200).end();
