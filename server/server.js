@@ -5,6 +5,7 @@ const express = require('express');
 const morgan = require('morgan');
 const dao = require('./dao');
 
+
 const PORT = 3001;
 
 const app = new express();
@@ -28,6 +29,67 @@ app.get('/api/films/:id', async (request, response) => {
     try {
 
         const result =  await dao.listFilmByID(request.params.id);
+
+        if(result.error)
+          response.status(404).json(result);
+        else 
+        response.json(result);
+    } catch (err) {
+        response.status(500).end();
+    }
+});
+
+
+//GETFAVORITES /api/favorites
+app.get('/api/favorites', async (request, response) => {
+    try {
+
+        const result =  await dao.listFavorite();
+
+        if(result.error)
+          response.status(404).json(result);
+        else 
+        response.json(result);
+    } catch (err) {
+        response.status(500).end();
+    }
+});
+
+//BESTRATED /api/bestrated
+app.get('/api/bestRated', async (request, response) => {
+    try {
+
+        const result =  await dao.listBestRated();
+
+        if(result.error)
+          response.status(404).json(result);
+        else 
+        response.json(result);
+    } catch (err) {
+        response.status(500).end();
+    }
+});
+
+//SEENLASTMONTH /api/seenLastMonth
+app.get('/api/seenLastMonth', async (request, response) => {
+    try {
+
+        const result =  await dao.listSeenLastMonth();
+
+        if(result.error)
+          response.status(404).json(result);
+        else 
+        response.json(result);
+    } catch (err) {
+        response.status(500).end();
+    }
+});
+
+//UNSEEN /api/unseen
+app.get('/api/unseen', async (request, response) => {
+    try {
+
+        const result =  await dao.listUnseen();
 
         if(result.error)
           response.status(404).json(result);

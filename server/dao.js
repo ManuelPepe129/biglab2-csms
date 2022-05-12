@@ -42,6 +42,67 @@ exports.listFilmByID = (id) => {
     })
 }
 
+
+//get favorites
+exports.listFavorite = () => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM FILMS WHERE favorite = 1" ;
+        db.all(sql, [], (err, rows) => {
+            if (err)
+                reject(err);
+            else {
+                const films = rows.map(row => new Film(row.id, row.title, row.favorite, row.watchdate, row.rating));
+                resolve(films);
+            }
+        });
+    })
+}
+
+//get bestRated
+exports.listBestRated = () => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM FILMS WHERE rating = 5" ;
+        db.all(sql, [], (err, rows) => {
+            if (err)
+                reject(err);
+            else {
+                const films = rows.map(row => new Film(row.id, row.title, row.favorite, row.watchdate, row.rating));
+                resolve(films);
+            }
+        });
+    })
+}
+
+//seenLastMonth
+exports.listSeenLastMonth = () => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM FILMS WHERE datediff(now(), watchdate)< 30" ;
+        db.all(sql, [], (err, rows) => {
+            if (err)
+                reject(err);
+            else {
+                const films = rows.map(row => new Film(row.id, row.title, row.favorite, row.watchdate, row.rating));
+                resolve(films);
+            }
+        });
+    })
+}
+
+//get unseen
+exports.listUnseen = () => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM FILMS WHERE watchdate is NULL" ;
+        db.all(sql, [], (err, rows) => {
+            if (err)
+                reject(err);
+            else {
+                const films = rows.map(row => new Film(row.id, row.title, row.favorite, row.watchdate, row.rating));
+                resolve(films);
+            }
+        });
+    })
+}
+
 //add new film
 exports.addFilm = (film) => {
     return new Promise((resolve, reject) => {
