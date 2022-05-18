@@ -30,34 +30,10 @@ function App() {
   }, []);
 
   useEffect(() => {
-    switch (filter) {
-      case 'Favorites':
-        API.getFavoriteFilms()
-          .then((films) => { setFilms(films) })
-          .catch(err => console.log(err));
-        break;
-      case 'Best Rated':
-        API.getBestRatedFilms()
-          .then((films) => { setFilms(films) })
-          .catch(err => console.log(err));
-        break;
-      case 'Seen Last Month':
-        API.getSeenLastMonth()
-          .then((films) => { setFilms(films) })
-          .catch(err => console.log(err));
-        break;
-      case 'Unseen':
-        API.getUnseenFilms()
-          .then((films) => { setFilms(films) })
-          .catch(err => console.log(err));
-        break;
-      default:
-        API.getAllFilms()
-          .then((films) => { setFilms(films) })
-          .catch(err => console.log(err));
-        break;
-    }
-  }, [filter]);
+    API.getFilmsByFilter(filter)
+    .then((films) => { setFilms(films) })
+      .catch(err => console.log(err));
+    }, [filter]);
 
   function updateFilm(film) {
     setFilms(films => films.map(

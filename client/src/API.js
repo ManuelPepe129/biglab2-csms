@@ -13,8 +13,9 @@ async function getAllFilms() {
     }
 }
 
-async function getFavoriteFilms() {
-    const response = await fetch(new URL('favorites', APIURL));
+async function getFilmsByFilter(filter) {
+    const filterURL = filter.replace(/\s/g, '').toLowerCase();
+    const response = await fetch(new URL(filterURL, APIURL));
     const filmsJson = await response.json();
     if (response.ok) {
         return filmsJson.map((film) => ({ id: film.id, title: film.title, favorite: film.favorite, watchdate: film.watchdate, rating: film.rating }));
@@ -23,35 +24,6 @@ async function getFavoriteFilms() {
     }
 }
 
-async function getBestRatedFilms() {
-    const response = await fetch(new URL('bestRated', APIURL));
-    const filmsJson = await response.json();
-    if (response.ok) {
-        return filmsJson.map((film) => ({ id: film.id, title: film.title, favorite: film.favorite, watchdate: film.watchdate, rating: film.rating }));
-    } else {
-        throw filmsJson;  // an object with the error coming from the server
-    }
-}
+const API = { getAllFilms, getFilmsByFilter };
 
-async function getUnseenFilms() {
-    const response = await fetch(new URL('unseen', APIURL));
-    const filmsJson = await response.json();
-    if (response.ok) {
-        return filmsJson.map((film) => ({ id: film.id, title: film.title, favorite: film.favorite, watchdate: film.watchdate, rating: film.rating }));
-    } else {
-        throw filmsJson;  // an object with the error coming from the server
-    }
-}
-
-async function getSeenLastMonth() {
-    const response = await fetch(new URL('seenLastMonth', APIURL));
-    const filmsJson = await response.json();
-    if (response.ok) {
-        return filmsJson.map((film) => ({ id: film.id, title: film.title, favorite: film.favorite, watchdate: film.watchdate, rating: film.rating }));
-    } else {
-        throw filmsJson;  // an object with the error coming from the server
-    }
-}
-
-const API = { getAllFilms, getFavoriteFilms, getBestRatedFilms, getUnseenFilms, getSeenLastMonth };
 export default API;
