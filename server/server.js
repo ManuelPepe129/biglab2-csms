@@ -6,7 +6,7 @@ const express = require('express');
 const morgan = require('morgan');
 const dao = require('./dao');
 const cors = require('cors');
-const {check, validationResult} = require('express-validator'); // validation middleware
+const { check, validationResult } = require('express-validator'); // validation middleware
 
 
 const PORT = 3001;
@@ -32,12 +32,12 @@ app.get('/api/films', (request, response) => {
 app.get('/api/films/:id', async (request, response) => {
     try {
 
-        const result =  await dao.listFilmByID(request.params.id);
+        const result = await dao.listFilmByID(request.params.id);
 
-        if(result.error)
-          response.status(404).json(result);
-        else 
-        response.json(result);
+        if (result.error)
+            response.status(404).json(result);
+        else
+            response.json(result);
     } catch (err) {
         response.status(500).end();
     }
@@ -48,12 +48,12 @@ app.get('/api/films/:id', async (request, response) => {
 app.get('/api/favorites', async (request, response) => {
     try {
 
-        const result =  await dao.listFavorite();
+        const result = await dao.listFavorite();
 
-        if(result.error)
-          response.status(404).json(result);
-        else 
-        response.json(result);
+        if (result.error)
+            response.status(404).json(result);
+        else
+            response.json(result);
     } catch (err) {
         response.status(500).end();
     }
@@ -63,12 +63,12 @@ app.get('/api/favorites', async (request, response) => {
 app.get('/api/bestRated', async (request, response) => {
     try {
 
-        const result =  await dao.listBestRated();
+        const result = await dao.listBestRated();
 
-        if(result.error)
-          response.status(404).json(result);
-        else 
-        response.json(result);
+        if (result.error)
+            response.status(404).json(result);
+        else
+            response.json(result);
     } catch (err) {
         response.status(500).end();
     }
@@ -78,12 +78,12 @@ app.get('/api/bestRated', async (request, response) => {
 app.get('/api/seenLastMonth', async (request, response) => {
     try {
 
-        const result =  await dao.listSeenLastMonth();
+        const result = await dao.listSeenLastMonth();
 
-        if(result.error)
-          response.status(404).json(result);
-        else 
-        response.json(result);
+        if (result.error)
+            response.status(404).json(result);
+        else
+            response.json(result);
     } catch (err) {
         response.status(500).end();
     }
@@ -93,12 +93,12 @@ app.get('/api/seenLastMonth', async (request, response) => {
 app.get('/api/unseen', async (request, response) => {
     try {
 
-        const result =  await dao.listUnseen();
+        const result = await dao.listUnseen();
 
-        if(result.error)
-          response.status(404).json(result);
-        else 
-        response.json(result);
+        if (result.error)
+            response.status(404).json(result);
+        else
+            response.json(result);
     } catch (err) {
         response.status(500).end();
     }
@@ -117,17 +117,17 @@ app.delete('/api/films/:id', async (request, response) => {
 });
 
 //ADD /api/films
-app.post('/api/films',[
-    check('favorite').isInt({min: 0, max: 1}),
-    check('rating').isInt({min: 0, max: 5}),
+app.post('/api/films', [
+    check('favorite').isInt({ min: 0, max: 1 }),
+    check('rating').isInt({ min: 0, max: 5 }),
     check('watchdate').isBefore(dayjs().format('YYYY-MM-DD')),
-  ],  async(request, response) => {
+], async (request, response) => {
     const errors = validationResult(request);
-    if(!errors.isEmpty()) {
-        return response.status(422).json({errors: errors.array()});
-    } 
-    
-    const film ={
+    if (!errors.isEmpty()) {
+        return response.status(422).json({ errors: errors.array() });
+    }
+
+    const film = {
         title: request.body.title,
         favorite: request.body.favorite,
         watchdate: request.body.watchdate,
@@ -135,7 +135,7 @@ app.post('/api/films',[
         user: 0,
     };
 
-    try{
+    try {
         await dao.addFilm(film);
         response.status(201).end();
     }
@@ -155,28 +155,28 @@ REQBIN TEST:
 } */
 
 //UPDATE /api/films/:id
-app.put('/api/films/:id',  [
-    check('favorite').isInt({min: 0, max: 1}),
-    check('rating').isInt({min: 0, max: 5}),
+app.put('/api/films/:id', [
+    check('favorite').isInt({ min: 0, max: 1 }),
+    check('rating').isInt({ min: 0, max: 5 }),
     check('watchdate').isBefore(dayjs().format('YYYY-MM-DD')),
-  ], async(request, response)=>{
+], async (request, response) => {
 
     const errors = validationResult(request);
-    if(!errors.isEmpty()) {
-        return response.status(422).json({errors: errors.array()});
-    } 
+    if (!errors.isEmpty()) {
+        return response.status(422).json({ errors: errors.array() });
+    }
 
-    const film ={
+    const film = {
         id: request.params.id,
         title: request.body.title,
         favorite: request.body.favorite,
         watchdate: request.body.watchdate,
         rating: request.body.rating,
-    }; 
+    };
 
-    
 
-    try{
+
+    try {
         await dao.updateFilm(film);
         response.status(200).end();
     }
@@ -187,13 +187,13 @@ app.put('/api/films/:id',  [
 
 //UPDATEFILMFAVORITE /api/films/:id/:favorite
 app.put('/api/films/:id/:favorite', [
-    check('favorite').isInt({min: 0, max: 1})
-], async(request, response)=>{
+    check('favorite').isInt({ min: 0, max: 1 })
+], async (request, response) => {
     const errors = validationResult(request);
-    if(!errors.isEmpty()) {
-        return response.status(422).json({errors: errors.array()});
-    } 
-    try{
+    if (!errors.isEmpty()) {
+        return response.status(422).json({ errors: errors.array() });
+    }
+    try {
         await dao.updateFilmFavorite(request.params.id, request.params.favorite);
         response.status(200).end();
     }

@@ -21,12 +21,44 @@ const filmList = [
 
 function App() {
   const [films, setFilms] = useState([]);
+  const [filter, setFilter] = useState('all');
 
   useEffect(() => {
     API.getAllFilms()
       .then((films) => { setFilms(films) })
       .catch(err => console.log(err));
   }, []);
+
+  useEffect(() => {
+    console.log('updating filter');
+    switch (filter) {
+      case 'Favorites':
+        API.getFavoriteFilms()
+          .then((films) => { setFilms(films) })
+          .catch(err => console.log(err));
+        break;
+      case 'Best Rated':
+        API.getBestRatedFilms()
+          .then((films) => { setFilms(films) })
+          .catch(err => console.log(err));
+        break;
+      case 'Seen Last Month':
+        API.getSeenLastMonth()
+          .then((films) => { setFilms(films) })
+          .catch(err => console.log(err));
+        break;
+      case 'Unseen':
+        API.getUnseenFilms()
+          .then((films) => { setFilms(films) })
+          .catch(err => console.log(err));
+        break;
+      default:
+        API.getAllFilms()
+          .then((films) => { setFilms(films) })
+          .catch(err => console.log(err));
+        break;
+    }
+  }, [filter]);
 
   function updateFilm(film) {
     setFilms(films => films.map(
@@ -40,13 +72,14 @@ function App() {
   function addFilm(newFilm) {
     setFilms(oldFilms => [...oldFilms, newFilm]);
   }
+
   return (
     <>
       <MyNavbar></MyNavbar>
       <Container fluid className="mh-100">
         <Router>
           <Routes>
-            <Route path='/' element={<MainComponent films={films} deleteFilm={deleteFilm} updateFilm={updateFilm} />}></Route>
+            <Route path='/' element={<MainComponent films={films} deleteFilm={deleteFilm} updateFilm={updateFilm} updateFilter={setFilter} />}></Route>
             <Route path='/add' element={<FilmFormWrapper addFilm={addFilm} films={films} />}></Route>
             <Route path='/edit/:filmId' element={<FilmFormWrapper addFilm={updateFilm} films={films} />}></Route>
             <Route path='*' element={<h1>Page not found</h1>}> </Route>

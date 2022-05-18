@@ -34,7 +34,7 @@ function MainComponent(props) {
   return (
     <Row>
       <Col xs={3} className={'sideBar'}>
-        <Sidebar />
+        <Sidebar updateFilter={props.updateFilter} />
       </Col>
       <Col xs={8}>
         {renderTable()}
@@ -54,26 +54,7 @@ function FilmTable(props) {
       <Table>
         <tbody>
           {
-            props.films.filter(f => {
-              switch (props.filter) {
-                case 'Favorites':
-                  return f.favorite;
-                case 'Best Rated':
-                  return f.rating === 5;
-                case 'Seen Last Month':
-                  const d = dayjs(f.watchdate);
-                  if (d.isValid()) {
-                    return d.isAfter(dayjs().subtract(30, 'day'));
-                  } else {
-                    return false;
-                  }
-                case 'Unseen':
-                  return !dayjs(f.watchdate).isValid();
-
-                default:
-                  return true;
-              }
-            }).map((film) => <FilmRow film={film} key={film.id} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} />)
+            props.films.map((film) => <FilmRow film={film} key={film.id} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} />)
           }
         </tbody>
       </Table>
