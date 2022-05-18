@@ -16,7 +16,7 @@ async function getAllFilms() {
 async function getFilmsByFilter(filter) {
     const filterURL = filter.replace(/\s/g, '').toLowerCase();
     if (filterURL === "all" || !filterURL) {
-        getAllFilms();
+        return getAllFilms();
     } else {
         const response = await fetch(new URL(filterURL, APIURL));
         const filmsJson = await response.json();
