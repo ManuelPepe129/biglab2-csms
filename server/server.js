@@ -5,6 +5,7 @@ const dayjs = require('dayjs');
 const express = require('express');
 const morgan = require('morgan');
 const dao = require('./dao');
+const cors = require('cors');
 const {check, validationResult} = require('express-validator'); // validation middleware
 
 
@@ -14,6 +15,7 @@ const app = new express();
 
 app.use(morgan('dev'));
 app.use(express.json());
+app.use(cors());
 
 /** APIs **/
 
