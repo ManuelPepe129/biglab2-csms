@@ -30,7 +30,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log('updating filter');
     switch (filter) {
       case 'Favorites':
         API.getFavoriteFilms()
