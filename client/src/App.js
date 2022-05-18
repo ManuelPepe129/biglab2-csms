@@ -5,9 +5,7 @@ import { Container } from 'react-bootstrap';
 import { MyNavbar } from './NavbarComponents';
 import { MainComponent } from './FilmsComponents';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 import { FilmFormWrapper } from './FilmForm';
-import API from './API';
 
 /*
 const filmList = [
@@ -20,33 +18,6 @@ const filmList = [
 */
 
 function App() {
-  const [films, setFilms] = useState([]);
-  const [filter, setFilter] = useState('all');
-
-  useEffect(() => {
-    API.getAllFilms()
-      .then((films) => { setFilms(films) })
-      .catch(err => console.log(err));
-  }, []);
-
-  useEffect(() => {
-    API.getFilmsByFilter(filter)
-    .then((films) => { setFilms(films) })
-      .catch(err => console.log(err));
-    }, [filter]);
-
-  function updateFilm(film) {
-    setFilms(films => films.map(
-      f => (f.id === film.id) ? Object.assign({}, film) : f
-    ));
-  }
-
-  function deleteFilm(id) {
-    setFilms(films.filter(f => f.id !== id));
-  }
-  function addFilm(newFilm) {
-    setFilms(oldFilms => [...oldFilms, newFilm]);
-  }
 
   return (
     <>
@@ -54,15 +25,14 @@ function App() {
       <Container fluid className="mh-100">
         <Router>
           <Routes>
-            <Route path='/' element={<MainComponent films={films} deleteFilm={deleteFilm} updateFilm={updateFilm} updateFilter={setFilter} />}></Route>
-            <Route path='/add' element={<FilmFormWrapper addFilm={addFilm} films={films} />}></Route>
-            <Route path='/edit/:filmId' element={<FilmFormWrapper addFilm={updateFilm} films={films} />}></Route>
+            <Route path='/' element={<MainComponent  />}></Route>
+            <Route path='/add' element={<FilmFormWrapper  />}></Route>
+            <Route path='/edit/:filmId' element={<FilmFormWrapper />}></Route>
             <Route path='*' element={<h1>Page not found</h1>}> </Route>
-            <Route path='/filter/:filter' element={<MainComponent films={films} deleteFilm={deleteFilm} updateFilm={updateFilm} />}> </Route>
+            <Route path='/filter/:filter' element={<MainComponent  />}> </Route>
           </Routes>
         </Router>
       </Container>
-
     </>
   );
 }

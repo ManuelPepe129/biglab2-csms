@@ -4,6 +4,8 @@ import { Sidebar } from './SidebarComponents';
 import './FilmsComponents.css';
 import { Trash, Pencil } from 'react-bootstrap-icons';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import API from './API';
 
 
 import dayjs from 'dayjs';
@@ -22,12 +24,12 @@ function MainComponent(props) {
         case 'Best Rated':
         case 'Seen Last Month':
         case 'Unseen':
-          return <FilmTable films={props.films} filter={filter} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} />;
+          return <FilmTable filter={filter} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} />;
         default:
           return <h1>Filter not found</h1>;
       }
     } else {
-      return <FilmTable films={props.films} filter={filter} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} />;
+      return <FilmTable filter={filter} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} />;
     }
   }
 
@@ -45,6 +47,23 @@ function MainComponent(props) {
 }
 
 function FilmTable(props) {
+  const [films, setFilms] = useState([]);
+
+  /*
+  useEffect(() => {
+    API.getAllFilms()
+      .then((films) => { setFilms(films) })
+      .catch(err => console.log(err));
+  }, []);
+  */
+
+  
+  useEffect(() => {
+    API.getFilmsByFilter(props.filter)
+    .then((films) => { setFilms(films) })
+      .catch(err => console.log(err));
+    }, [props.filter]);
+
 
   const navigate = useNavigate();
 
@@ -54,7 +73,7 @@ function FilmTable(props) {
       <Table>
         <tbody>
           {
-            props.films.map((film) => <FilmRow film={film} key={film.id} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} />)
+            films.map((film) => <FilmRow film={film} key={film.id} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} />)
           }
         </tbody>
       </Table>

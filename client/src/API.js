@@ -14,17 +14,22 @@ async function getAllFilms() {
 }
 
 async function getFilmsByFilter(filter) {
-    const filterURL = filter.replace(/\s/g, '').toLowerCase();
-    if (filterURL === "all" || !filterURL) {
-        return getAllFilms();
-    } else {
-        const response = await fetch(new URL(filterURL, APIURL));
-        const filmsJson = await response.json();
-        if (response.ok) {
-            return filmsJson.map((film) => ({ id: film.id, title: film.title, favorite: film.favorite, watchdate: film.watchdate, rating: film.rating }));
-        } else {
-            throw filmsJson;  // an object with the error coming from the server
+    if (!filter) {
+        try {
+            return await getAllFilms();
+        } catch (error) {
+            console.error(error);
         }
+    }
+
+    const filterURL = filter.replace(/\s/g, '').toLowerCase();
+    const response = await fetch(new URL(filterURL, APIURL));
+    const filmsJson = await response.json();
+
+    if (response.ok) {
+        return filmsJson.map((film) => ({ id: film.id, title: film.title, favorite: film.favorite, watchdate: film.watchdate, rating: film.rating }));
+    } else {
+        throw filmsJson;  // an object with the error coming from the server
     }
 }
 
