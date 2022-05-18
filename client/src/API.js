@@ -15,12 +15,16 @@ async function getAllFilms() {
 
 async function getFilmsByFilter(filter) {
     const filterURL = filter.replace(/\s/g, '').toLowerCase();
-    const response = await fetch(new URL(filterURL, APIURL));
-    const filmsJson = await response.json();
-    if (response.ok) {
-        return filmsJson.map((film) => ({ id: film.id, title: film.title, favorite: film.favorite, watchdate: film.watchdate, rating: film.rating }));
+    if (filterURL === "all") {
+        getAllFilms();
     } else {
-        throw filmsJson;  // an object with the error coming from the server
+        const response = await fetch(new URL(filterURL, APIURL));
+        const filmsJson = await response.json();
+        if (response.ok) {
+            return filmsJson.map((film) => ({ id: film.id, title: film.title, favorite: film.favorite, watchdate: film.watchdate, rating: film.rating }));
+        } else {
+            throw filmsJson;  // an object with the error coming from the server
+        }
     }
 }
 
