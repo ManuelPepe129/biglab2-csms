@@ -7,7 +7,7 @@ async function getAllFilms() {
     const response = await fetch(new URL('films', APIURL));
     const filmsJson = await response.json();
     if (response.ok) {
-        return filmsJson.map((film) => ({ id: film.id, title: film.title, isFavourite: film.isFavourite, date: film.date, rating: film.rating }));
+        return filmsJson.map((film) => ({ id: film.id, title: film.title, favorite: film.favorite, watchdate: film.watchdate, rating: film.rating }));
     } else {
         throw filmsJson;  // an object with the error coming from the server
     }

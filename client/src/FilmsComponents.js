@@ -57,18 +57,18 @@ function FilmTable(props) {
             props.films.filter(f => {
               switch (props.filter) {
                 case 'Favorites':
-                  return f.isFavourite;
+                  return f.favorite;
                 case 'Best Rated':
                   return f.rating === 5;
                 case 'Seen Last Month':
-                  const d = dayjs(f.date);
+                  const d = dayjs(f.watchdate);
                   if (d.isValid()) {
                     return d.isAfter(dayjs().subtract(30, 'day'));
                   } else {
                     return false;
                   }
                 case 'Unseen':
-                  return !dayjs(f.date).isValid();
+                  return !dayjs(f.watchdate).isValid();
 
                 default:
                   return true;
@@ -94,30 +94,30 @@ function FilmData(props) {
   const navigate = useNavigate();
 
   const ratingChanged = (newRating) => {
-    const newFilm = { id: props.film.id, title: props.film.title, isFavourite: props.film.isFavourite, date: props.film.date, rating: newRating };
+    const newFilm = { id: props.film.id, title: props.film.title, favorite: props.film.favorite, watchdate: props.film.watchdate, rating: newRating };
     props.updateFilm(newFilm);
   }
 
   const toggleFavourite = (event) => {
-    const newFilm = { id: props.film.id, title: props.film.title, isFavourite: event.target.checked, date: props.film.date, rating: props.film.rating };
+    const newFilm = { id: props.film.id, title: props.film.title, favorite: event.target.checked, watchdate: props.film.watchdate, rating: props.film.rating };
     props.updateFilm(newFilm);
   }
 
   return (
     <>
-      <td className={`favorite text-start col-4 ${(props.film.isFavourite) ? "red" : false}`}>
+      <td className={`favorite text-start col-4 ${(props.film.favorite) ? "red" : false}`}>
         {props.film.title}
       </td>
       <td>
         <Form.Group controlId="formBasicCheckbox">
-          <Form.Check inline type="checkbox" label="Favorite" defaultChecked={props.film.isFavourite}
+          <Form.Check inline type="checkbox" label="Favorite" defaultChecked={props.film.favorite}
             onChange={(event) => {
               toggleFavourite(event);
             }} />
         </Form.Group>
       </td>
       <td>
-        {(dayjs(props.film.date).isValid()) ? dayjs(props.film.date).format('YYYY-MM-DD') : ""}
+        {(dayjs(props.film.watchdate).isValid()) ? dayjs(props.film.watchdate).format('YYYY-MM-DD') : ""}
       </td>
       <td>
         <ReactStars
