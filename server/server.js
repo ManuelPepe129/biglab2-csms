@@ -14,13 +14,13 @@ app.use(express.json);
 /** APIs **/
 
 //GET /api/films
-app.get('/api/films', (request, response) =>{
+app.get('/api/films', (request, response) => {
     dao.listFilms()
-    .then(films => response.json(films))
-    .catch(()=>response.status(500).end());
+        .then(films => response.json(films))
+        .catch(() => response.status(500).end());
 });
 
 
 
 
-app.listen(PORT, ()=>console.log(`Server running on http://localhost:${PORT}/`));
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}/`));
