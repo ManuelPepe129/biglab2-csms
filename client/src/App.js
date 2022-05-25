@@ -62,6 +62,14 @@ function App() {
       .then( () => setDirty(true) )
       .catch( err => console.log(err) );
   }
+  function updateFilmFavorite(film) {
+    setFilms(films => films.map(
+      f => (f.id === film.id) ? Object.assign({}, film) : f
+    ));
+    API.updateFavorite(film)
+      .then( () => setDirty(true) )
+      .catch( err => console.log(err) );
+  }
 
   return (
     <>
@@ -69,11 +77,11 @@ function App() {
       <Container fluid className="mh-100">
         <Router>
           <Routes>
-            <Route path='/' element={<MainComponent films={films} filter={filter} deleteFilm={deleteFilm} setF={setFilter}/>}  ></Route>
+            <Route path='/' element={<MainComponent films={films} filter={filter} deleteFilm={deleteFilm} setF={setFilter} updateFavorite={updateFilmFavorite}/>}  ></Route>
             <Route path='/add' element={<FilmFormWrapper films={films} addFilm={addFilm}/>}></Route>
             <Route path='/edit/:filmId' element={<FilmFormWrapper films={films} addFilm={updateFilm}/>}></Route>
             <Route path='*' element={<h1>Page not found</h1>}> </Route>
-            <Route path='/filter/:filter' element={<MainComponent films={films} filter={filter} deleteFilm={deleteFilm} setF={setFilter}/>}> </Route>
+            <Route path='/filter/:filter' element={<MainComponent films={films} filter={filter} deleteFilm={deleteFilm} setF={setFilter} updateFavorite={updateFilmFavorite}/>}> </Route>
           </Routes>
         </Router>
       </Container>

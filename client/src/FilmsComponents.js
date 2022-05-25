@@ -23,12 +23,12 @@ function MainComponent(props) {
         case 'Best Rated':
         case 'Seen Last Month':
         case 'Unseen':
-          return <FilmTable films={props.films} filter={props.filter} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} />;
+          return <FilmTable films={props.films} filter={props.filter} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} updateFavorite={props.updateFavorite}/>;
         default:
           return <h1>Filter not found</h1>;
       }
     } else {
-      return <FilmTable films={props.films} filter={props.filter} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} />;
+      return <FilmTable films={props.films} filter={props.filter} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} updateFavorite={props.updateFavorite}/>;
     }
   }
 
@@ -64,7 +64,7 @@ function FilmTable(props) {
       <Table>
         <tbody>
           {
-            props.films.map((film) => <FilmRow film={film} key={film.id} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} />)
+            props.films.map((film) => <FilmRow film={film} key={film.id} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} updateFavorite={props.updateFavorite}/>)
           }
         </tbody>
       </Table>
@@ -76,7 +76,7 @@ function FilmTable(props) {
 function FilmRow(props) {
   return (
     <tr>
-      <FilmData film={props.film} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} />
+      <FilmData film={props.film} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} updateFavorite={props.updateFavorite}/>
     </tr>
   )
 }
@@ -91,7 +91,7 @@ function FilmData(props) {
 
   const toggleFavourite = (event) => {
     const newFilm = { id: props.film.id, title: props.film.title, favorite: event.target.checked, watchdate: props.film.watchdate, rating: props.film.rating };
-    props.updateFilm(newFilm);
+    props.updateFavorite(newFilm);
   }
 
   return (

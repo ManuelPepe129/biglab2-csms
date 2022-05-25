@@ -91,6 +91,26 @@ function deleteFilm(filmId) {
       }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
     });
   }
-const API = { getAllFilms, getFilmsByFilter, addFilm,deleteFilm,updateFilm};
+  function updateFavorite(film) {
+    // call: PUT /api/films/:Id
+    return new Promise((resolve, reject) => {
+      fetch(new URL('films/' + film.id + '/' + film.favorite, APIURL), {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      }).then((response) => {
+        if (response.ok) {
+          resolve(null);
+        } else {
+          // analyze the cause of error
+          response.json()
+            .then((obj) => { reject(obj); }) // error message in the response body
+            .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+        }
+      }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
+  }
+const API = { getAllFilms, getFilmsByFilter, addFilm,deleteFilm,updateFilm,updateFavorite};
 
 export default API;

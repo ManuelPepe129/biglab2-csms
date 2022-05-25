@@ -174,7 +174,7 @@ app.put('/api/films/:id', [
         rating: request.body.rating,
     };
 
-
+    
 
     try {
         await dao.updateFilm(film);
@@ -187,7 +187,7 @@ app.put('/api/films/:id', [
 
 //UPDATEFILMFAVORITE /api/films/:id/:favorite
 app.put('/api/films/:id/:favorite', [
-    check('favorite').isInt({ min: 0, max: 1 })
+   // check('favorite').isInt({ min: 0, max: 1 })
 ], async (request, response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
