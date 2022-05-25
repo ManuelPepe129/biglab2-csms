@@ -93,6 +93,9 @@ function deleteFilm(filmId) {
   }
   function updateFavorite(film) {
     // call: PUT /api/films/:Id
+    if(film.favorite==false)
+    film.favorite=0;
+    else film.favorite=1;
     return new Promise((resolve, reject) => {
       fetch(new URL('films/' + film.id + '/' + film.favorite, APIURL), {
         method: 'PUT',

@@ -133,6 +133,7 @@ exports.updateFilm = (film) => {
 
 //update film mark
 exports.updateFilmFavorite = (id, favorite) => {
+    
     return new Promise((resolve, reject) => {
         const sql = "UPDATE films SET  favorite=? WHERE id=?";
         db.run(sql, [ favorite, id], function (err) {
