@@ -40,7 +40,7 @@ async function addFilm(film){
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({title: film.title, favorite: film.favorite, watchdate: film.watchdate, rating: film.rating}),
+            body: JSON.stringify({id : film.id, title: film.title, favorite: film.favorite, watchdate: film.watchdate, rating: film.rating}),
         }).then((response)=>{
             if(response.ok){
                 resolve(null);
@@ -52,8 +52,25 @@ async function addFilm(film){
         }).catch(()=> {reject({error:"Cannot communicate with server."})});
     });
 }
+function deleteFilm(filmId) {
+    
+    return new Promise((resolve, reject) => {
+      fetch(new URL('films/' + filmId, APIURL), {
+        method: 'DELETE',
+      }).then((response) => {
+        if (response.ok) {
+          resolve(null);
+        } else {
+          // analyze the cause of error
+          response.json()
+            .then((message) => { reject(message); }) // error message in the response body
+            .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+        }
+      }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
+  }
 
 
-const API = { getAllFilms, getFilmsByFilter, addFilm};
+const API = { getAllFilms, getFilmsByFilter, addFilm,deleteFilm};
 
 export default API;
