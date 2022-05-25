@@ -47,12 +47,20 @@ function App() {
       .catch((err) => console.log(err));
   }
   function deleteFilm(filmId) {
-    // setExams(...)   // remove exam
-    //setExams( exams.filter( (e)=> e.code !== code ) );
+
     setFilms( f => f.map( fi => (fi.id === filmId) ? {...fi} : fi ))
     API.deleteFilm(filmId)
       .then( ()=> setDirty(true))
       .catch( err => console.log(err));
+  }
+
+  function updateFilm(film) {
+    setFilms(films => films.map(
+      f => (f.id === film.id) ? Object.assign({}, film) : f
+    ));
+    API.updateFilm(film)
+      .then( () => setDirty(true) )
+      .catch( err => console.log(err) );
   }
 
   return (
@@ -63,7 +71,7 @@ function App() {
           <Routes>
             <Route path='/' element={<MainComponent films={films} filter={filter} deleteFilm={deleteFilm} setF={setFilter}/>}  ></Route>
             <Route path='/add' element={<FilmFormWrapper films={films} addFilm={addFilm}/>}></Route>
-            <Route path='/edit/:filmId' element={<FilmFormWrapper />}></Route>
+            <Route path='/edit/:filmId' element={<FilmFormWrapper films={films} addFilm={updateFilm}/>}></Route>
             <Route path='*' element={<h1>Page not found</h1>}> </Route>
             <Route path='/filter/:filter' element={<MainComponent films={films} filter={filter} deleteFilm={deleteFilm} setF={setFilter}/>}> </Route>
           </Routes>

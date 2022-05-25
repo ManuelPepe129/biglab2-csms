@@ -156,9 +156,9 @@ REQBIN TEST:
 
 //UPDATE /api/films/:id
 app.put('/api/films/:id', [
-    check('favorite').isInt({ min: 0, max: 1 }),
-    check('rating').isInt({ min: 0, max: 5 }),
-    check('watchdate').isBefore(dayjs().format('YYYY-MM-DD')),
+   // check('favorite').isInt({ min: 0, max: 1 }),
+    //check('rating').isInt({ min: 0, max: 5 }),
+   // check('watchdate').isBefore(dayjs().format('YYYY-MM-DD')),
 ], async (request, response) => {
 
     const errors = validationResult(request);
