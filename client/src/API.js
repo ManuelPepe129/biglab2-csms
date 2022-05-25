@@ -33,6 +33,27 @@ async function getFilmsByFilter(filter) {
     }
 }
 
-const API = { getAllFilms, getFilmsByFilter };
+async function addFilm(film){
+    return new Promise((resolve, reject)=>{
+        fetch(new URL('films', APIURL), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({title: film.title, favorite: film.favorite, watchdate: film.watchdate, rating: film.rating}),
+        }).then((response)=>{
+            if(response.ok){
+                resolve(null);
+            } else {
+                response.json()
+                .then((message)=>{reject(message);})
+                .catch(()=> {reject({error:"Cannot parse server response."})});
+            }
+        }).catch(()=> {reject({error:"Cannot communicate with server."})});
+    });
+}
+
+
+const API = { getAllFilms, getFilmsByFilter, addFilm};
 
 export default API;

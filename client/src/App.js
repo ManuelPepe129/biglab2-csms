@@ -4,8 +4,10 @@ import React from 'react';
 import { Container } from 'react-bootstrap';
 import { MyNavbar } from './NavbarComponents';
 import { MainComponent } from './FilmsComponents';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useParams, BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { FilmFormWrapper } from './FilmForm';
+import { useState, useEffect } from 'react';
+import API from './API';
 
 /*
 const filmList = [
@@ -19,17 +21,43 @@ const filmList = [
 
 function App() {
 
+  const [ filter, setFilter ] = useState('');
+  const [films, setFilms] = useState([]);
+  const [dirty, setDirty] = useState(true);
+  
+  useEffect(() => {
+    API.getFilmsByFilter(filter)
+      .then((films) => { setFilms(films) })
+      .catch(err => console.log(err));
+  }, [filter]);
+
+  useEffect(() => {
+    if (films.length && dirty) {
+      API.getFilmsByFilter(filter)
+        .then((films) => { setFilms(films); setDirty(false); })
+        .catch(err => console.log(err));
+    }
+  }, [films.length, dirty]);
+
+  function addFilm(film) {
+    //film.status= 'added';
+    setFilms(oldFilms => [...oldFilms, film]);
+    API.addFilm(film)
+      .then(() => setDirty(true))
+      .catch((err) => console.log(err));
+  }
+
   return (
     <>
       <MyNavbar></MyNavbar>
       <Container fluid className="mh-100">
         <Router>
           <Routes>
-            <Route path='/' element={<MainComponent  />}></Route>
-            <Route path='/add' element={<FilmFormWrapper  />}></Route>
+            <Route path='/' element={<MainComponent films={films} filter={filter} setF={setFilter}/>}  ></Route>
+            <Route path='/add' element={<FilmFormWrapper films={films} addFilm={addFilm}/>}></Route>
             <Route path='/edit/:filmId' element={<FilmFormWrapper />}></Route>
             <Route path='*' element={<h1>Page not found</h1>}> </Route>
-            <Route path='/filter/:filter' element={<MainComponent  />}> </Route>
+            <Route path='/filter/:filter' element={<MainComponent films={films} filter={filter} setF={setFilter}/>}> </Route>
           </Routes>
         </Router>
       </Container>

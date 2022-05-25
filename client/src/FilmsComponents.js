@@ -5,8 +5,6 @@ import './FilmsComponents.css';
 import { Trash, Pencil } from 'react-bootstrap-icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import API from './API';
-
 
 import dayjs from 'dayjs';
 
@@ -16,27 +14,28 @@ function MainComponent(props) {
   const { filter } = useParams();
 
   function renderTable() {
-    if (filter) {
-      switch (filter) {
+    props.setF(()=>filter);
+    if (props.filter) {
+      switch (props.filter) {
         case '':
         case 'All':
         case 'Favorites':
         case 'Best Rated':
         case 'Seen Last Month':
         case 'Unseen':
-          return <FilmTable filter={filter} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} />;
+          return <FilmTable films={props.films} filter={props.filter} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} />;
         default:
           return <h1>Filter not found</h1>;
       }
     } else {
-      return <FilmTable filter={filter} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} />;
+      return <FilmTable films={props.films} filter={props.filter} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} />;
     }
   }
 
   return (
     <Row>
       <Col xs={3} className={'sideBar'}>
-        <Sidebar updateFilter={props.updateFilter} />
+        <Sidebar/>
       </Col>
       <Col xs={8}>
         {renderTable()}
@@ -47,8 +46,7 @@ function MainComponent(props) {
 }
 
 function FilmTable(props) {
-  const [films, setFilms] = useState([]);
-
+  
   /*
   useEffect(() => {
     API.getAllFilms()
@@ -56,13 +54,6 @@ function FilmTable(props) {
       .catch(err => console.log(err));
   }, []);
   */
-
-  
-  useEffect(() => {
-    API.getFilmsByFilter(props.filter)
-    .then((films) => { setFilms(films) })
-      .catch(err => console.log(err));
-    }, [props.filter]);
 
 
   const navigate = useNavigate();
@@ -73,7 +64,7 @@ function FilmTable(props) {
       <Table>
         <tbody>
           {
-            films.map((film) => <FilmRow film={film} key={film.id} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} />)
+            props.films.map((film) => <FilmRow film={film} key={film.id} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} />)
           }
         </tbody>
       </Table>
