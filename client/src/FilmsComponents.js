@@ -11,10 +11,8 @@ import dayjs from 'dayjs';
 import ReactStars from 'react-stars'
 
 function MainComponent(props) {
-  const { filter } = useParams();
 
   function renderTable() {
-    props.setF(() => filter);
     if (props.filter) {
       switch (props.filter) {
         case '':
@@ -35,7 +33,7 @@ function MainComponent(props) {
   return (
     <Row>
       <Col xs={3} className={'sideBar'}>
-        <Sidebar />
+        <Sidebar setFilter={props.setFilter}/>
       </Col>
       <Col xs={8}>
         {renderTable()}

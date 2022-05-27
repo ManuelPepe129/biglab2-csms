@@ -78,11 +78,11 @@ function App() {
       <Container fluid className="mh-100">
         <Router>
           <Routes>
-            <Route path='/' element={<MainComponent films={films} filter={filter} deleteFilm={deleteFilm} setF={setFilter} updateFilm={updateFilm} updateFavorite={updateFilmFavorite} />}  ></Route>
+            <Route path='/' element={<MainComponent films={films} filter={filter} deleteFilm={deleteFilm} setFilter={setFilter} updateFilm={updateFilm} updateFavorite={updateFilmFavorite} />}  ></Route>
             <Route path='/add' element={<FilmFormWrapper films={films} addFilm={addFilm} />}></Route>
             <Route path='/edit/:filmId' element={<FilmFormWrapper films={films} addFilm={updateFilm} />}></Route>
             <Route path='*' element={<h1>Page not found</h1>}> </Route>
-            <Route path='/filter/:filter' element={<MainComponent films={films} filter={filter} deleteFilm={deleteFilm} setF={setFilter} updateFilm={updateFilm} updateFavorite={updateFilmFavorite} />}> </Route>
+            <Route path='/filter/:filter' element={<MainComponent films={films} filter={filter} deleteFilm={deleteFilm} setFilter={setFilter} updateFilm={updateFilm} updateFavorite={updateFilmFavorite} />}> </Route>
           </Routes>
         </Router>
       </Container>
