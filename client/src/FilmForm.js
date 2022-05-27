@@ -13,7 +13,6 @@ function FilmFormWrapper(props) {
 
     const filmToEdit = props.films.find((f) => f.id.toString() === filmId);
 
-
     return (
         (!filmToEdit && location !== '/add') ?
             (<>
@@ -29,8 +28,8 @@ function FilmFormWrapper(props) {
 function FilmForm(props) {
 
     const [title, setTitle] = useState(props.filmToEdit ? props.filmToEdit.title : '');
-    const [date, setDate] = useState(props.filmToEdit ? props.filmToEdit.date : '');
-    const [favorite, setFavorite] = useState(props.filmToEdit ? props.filmToEdit.isFavourite : false);
+    const [watchdate, setDate] = useState(props.filmToEdit ? props.filmToEdit.watchdate : '');
+    const [favorite, setFavorite] = useState(props.filmToEdit ? props.filmToEdit.favorite : false);
     const [rate, setRate] = useState(props.filmToEdit ? props.filmToEdit.rating : 0);
     const [errorMsg, setErrorMsg] = useState('');
 
@@ -42,7 +41,7 @@ function FilmForm(props) {
 
     function handleSubmit(event) {
         event.preventDefault();
-        const dateObject = dayjs(date);
+        const dateObject = dayjs(watchdate);
 
         if (title.trim().length === 0) {
             setErrorMsg('Title name can not be empty');
@@ -52,8 +51,8 @@ function FilmForm(props) {
             setErrorMsg('Date can not be in a future day');
         } else {
             const id = props.filmToEdit ? props.filmToEdit.id : props.films.at(-1).id + 1;
-            const newDate = dateObject.isValid() ? date : '';
-            const newFilm = { id: id, title: title.trim(), isFavourite: favorite, date: newDate, rating: rate }
+            const newDate = dateObject.isValid() ? watchdate : '';
+            const newFilm = { id: id, title: title.trim(), favorite: favorite, watchdate: newDate, rating: rate }
             props.addFilm(newFilm);
             navigate('/');
         }
@@ -75,8 +74,8 @@ function FilmForm(props) {
             <Form.Group className="mb-3">
                 <Form.Label>Whatch Date</Form.Label>
                 <Form.Control
-                    type="date"
-                    value={dayjs(date).format('YYYY-MM-DD')}
+                    type="watchdate"
+                    value={dayjs(watchdate).format('YYYY-MM-DD')}
                     onChange={ev => setDate(dayjs(ev.target.value))}
                 />
             </Form.Group>

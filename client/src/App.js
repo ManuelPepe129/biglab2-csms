@@ -21,10 +21,10 @@ const filmList = [
 
 function App() {
 
-  const [ filter, setFilter ] = useState('');
+  const [filter, setFilter] = useState('');
   const [films, setFilms] = useState([]);
   const [dirty, setDirty] = useState(true);
-  
+
   useEffect(() => {
     API.getFilmsByFilter(filter)
       .then((films) => { setFilms(films) })
@@ -37,7 +37,7 @@ function App() {
         .then((films) => { setFilms(films); setDirty(false); })
         .catch(err => console.log(err));
     }
-  }, [films.length, dirty]);
+  }, [films.length, dirty, filter]);
 
   function addFilm(film) {
     //film.status= 'added';
@@ -46,12 +46,12 @@ function App() {
       .then(() => setDirty(true))
       .catch((err) => console.log(err));
   }
-  function deleteFilm(filmId) {
 
-    setFilms( f => f.map( fi => (fi.id === filmId) ? {...fi} : fi ))
+  function deleteFilm(filmId) {
+    setFilms(f => f.map(fi => (fi.id === filmId) ? { ...fi } : fi));
     API.deleteFilm(filmId)
-      .then( ()=> setDirty(true))
-      .catch( err => console.log(err));
+      .then(() => setDirty(true))
+      .catch(err => console.log(err));
   }
 
   function updateFilm(film) {
@@ -59,16 +59,17 @@ function App() {
       f => (f.id === film.id) ? Object.assign({}, film) : f
     ));
     API.updateFilm(film)
-      .then( () => setDirty(true) )
-      .catch( err => console.log(err) );
+      .then(() => setDirty(true))
+      .catch(err => console.log(err));
   }
+
   function updateFilmFavorite(film) {
     setFilms(films => films.map(
       f => (f.id === film.id) ? Object.assign({}, film) : f
     ));
     API.updateFavorite(film)
-      .then( () => setDirty(true) )
-      .catch( err => console.log(err) );
+      .then(() => setDirty(true))
+      .catch(err => console.log(err));
   }
 
   return (
@@ -77,11 +78,11 @@ function App() {
       <Container fluid className="mh-100">
         <Router>
           <Routes>
-            <Route path='/' element={<MainComponent films={films} filter={filter} deleteFilm={deleteFilm} setF={setFilter} updateFavorite={updateFilmFavorite}/>}  ></Route>
-            <Route path='/add' element={<FilmFormWrapper films={films} addFilm={addFilm}/>}></Route>
-            <Route path='/edit/:filmId' element={<FilmFormWrapper films={films} addFilm={updateFilm}/>}></Route>
+            <Route path='/' element={<MainComponent films={films} filter={filter} deleteFilm={deleteFilm} setF={setFilter} updateFavorite={updateFilmFavorite} />}  ></Route>
+            <Route path='/add' element={<FilmFormWrapper films={films} addFilm={addFilm} />}></Route>
+            <Route path='/edit/:filmId' element={<FilmFormWrapper films={films} addFilm={updateFilm} />}></Route>
             <Route path='*' element={<h1>Page not found</h1>}> </Route>
-            <Route path='/filter/:filter' element={<MainComponent films={films} filter={filter} deleteFilm={deleteFilm} setF={setFilter} updateFavorite={updateFilmFavorite}/>}> </Route>
+            <Route path='/filter/:filter' element={<MainComponent films={films} filter={filter} deleteFilm={deleteFilm} setF={setFilter} updateFavorite={updateFilmFavorite} />}> </Route>
           </Routes>
         </Router>
       </Container>
