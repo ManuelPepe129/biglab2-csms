@@ -40,7 +40,7 @@ async function addFilm(film){
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({id : film.id, title: film.title, favorite: film.favorite, watchdate: film.watchdate, rating: film.rating}),
+            body: JSON.stringify({id : film.id, title: film.title, favorite: film.isFavourite, watchdate: film.watchdate, rating: film.rating}),
         }).then((response)=>{
             if(response.ok){
                 resolve(null);
