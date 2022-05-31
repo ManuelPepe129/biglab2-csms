@@ -74,8 +74,26 @@ function FilmTable(props) {
 }
 
 function FilmRow(props) {
+  let statusClass = null;
+
+  switch (props.film.status) {
+    case 'added':
+      statusClass = 'table-success';
+      break;
+
+    case 'edited':
+      statusClass = 'table-warning';
+      break;
+
+    case 'deleted':
+      statusClass = 'table-danger';
+      break;
+    default:
+      break;
+  }
+  
   return (
-    <tr>
+    <tr className={statusClass}>
       <FilmData film={props.film} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} updateFavorite={props.updateFavorite} />
     </tr>
   )
