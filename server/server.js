@@ -78,7 +78,7 @@ app.use(passport.session());
 
 //GETALL /api/films
 app.get('/api/films', isLoggedIn, (request, response) => {
-    dao.listFilms()
+    dao.listFilms(request.user.id)
         .then(films => response.json(films))
         .catch(() => response.status(500).end());
 });
@@ -89,7 +89,7 @@ app.get('/api/films', isLoggedIn, (request, response) => {
 app.get('/api/films/:id', isLoggedIn, async (request, response) => {
     try {
 
-        const result = await dao.listFilmByID(request.params.id);
+        const result = await dao.listFilmByID(request.params.id, request.user.id);
 
         if (result.error)
             response.status(404).json(result);
@@ -105,7 +105,7 @@ app.get('/api/films/:id', isLoggedIn, async (request, response) => {
 app.get('/api/favorites', isLoggedIn, async (request, response) => {
     try {
 
-        const result = await dao.listFavorite();
+        const result = await dao.listFavorite(request.user.id);
 
         if (result.error)
             response.status(404).json(result);
@@ -120,7 +120,7 @@ app.get('/api/favorites', isLoggedIn, async (request, response) => {
 app.get('/api/bestRated', isLoggedIn, async (request, response) => {
     try {
 
-        const result = await dao.listBestRated();
+        const result = await dao.listBestRated(request.user.id);
 
         if (result.error)
             response.status(404).json(result);
@@ -135,7 +135,7 @@ app.get('/api/bestRated', isLoggedIn, async (request, response) => {
 app.get('/api/seenLastMonth', isLoggedIn, async (request, response) => {
     try {
 
-        const result = await dao.listSeenLastMonth();
+        const result = await dao.listSeenLastMonth(request.user.id);
 
         if (result.error)
             response.status(404).json(result);
@@ -150,7 +150,7 @@ app.get('/api/seenLastMonth', isLoggedIn, async (request, response) => {
 app.get('/api/unseen', isLoggedIn, async (request, response) => {
     try {
 
-        const result = await dao.listUnseen();
+        const result = await dao.listUnseen(request.user.id);
 
         if (result.error)
             response.status(404).json(result);
@@ -166,7 +166,7 @@ app.get('/api/unseen', isLoggedIn, async (request, response) => {
 //DELETE /api/films/:id
 app.delete('/api/films/:id', isLoggedIn, async (request, response) => {
     try {
-        await dao.deleteFilm(request.params.id);
+        await dao.deleteFilm(request.params.id, request.user.id);
         response.status(204).end();
     } catch (err) {
         response.status(503).json({ error: `Database error during the deletion of film ${request.params.id}.` });
@@ -189,7 +189,7 @@ app.post('/api/films', isLoggedIn, [
         favorite: request.body.favorite,
         watchdate: request.body.watchdate,
         rating: request.body.rating,
-        user: 0,
+        user: request.user.id,
     };
 
     try {
@@ -234,7 +234,7 @@ app.put('/api/films/:id', isLoggedIn, [
 
 
     try {
-        await dao.updateFilm(film);
+        await dao.updateFilm(film, request.user.id);
         response.status(200).end();
     }
     catch (err) {
@@ -251,7 +251,7 @@ app.put('/api/films/:id/:favorite', isLoggedIn, [
         return response.status(422).json({ errors: errors.array() });
     }
     try {
-        await dao.updateFilmFavorite(request.params.id, request.params.favorite);
+        await dao.updateFilmFavorite(request.params.id, request.params.favorite, request.user.id);
         response.status(200).end();
     }
     catch (err) {

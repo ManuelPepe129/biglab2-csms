@@ -2,7 +2,7 @@
 
 //const dayjs = require ('dayjs');
 
-function Film(id, title, favorite, watchdate, rating, user=0){
+function Film(id, title, favorite, watchdate, rating, user){
     this.id = id;
     this.title = title;
     this.favorite = favorite;

@@ -4,7 +4,7 @@ const APIURL = new URL('http://localhost:3001/api/');  // Do not forget '/' at t
 
 async function getAllFilms() {
   // call: GET /api/courses
-  const response = await fetch(new URL('films', APIURL), {credentials: 'include'});
+  const response = await fetch(new URL('films', APIURL), { credentials: 'include' });
   const filmsJson = await response.json();
   if (response.ok) {
     return filmsJson.map((film) => ({ id: film.id, title: film.title, favorite: film.favorite, watchdate: film.watchdate, rating: film.rating }));
@@ -23,7 +23,7 @@ async function getFilmsByFilter(filter) {
   }
 
   const filterURL = filter.replace(/\s/g, '').toLowerCase();
-  const response = await fetch(new URL(filterURL, APIURL), {credentials: 'include'});
+  const response = await fetch(new URL(filterURL, APIURL), { credentials: 'include' });
   const filmsJson = await response.json();
 
   if (response.ok) {
@@ -37,6 +37,7 @@ async function addFilm(film) {
   return new Promise((resolve, reject) => {
     fetch(new URL('films', APIURL), {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -57,6 +58,7 @@ function deleteFilm(filmId) {
   return new Promise((resolve, reject) => {
     fetch(new URL('films/' + filmId, APIURL), {
       method: 'DELETE',
+      credentials: 'include'
     }).then((response) => {
       if (response.ok) {
         resolve(null);
@@ -75,6 +77,7 @@ function updateFilm(film) {
   return new Promise((resolve, reject) => {
     fetch(new URL('films/' + film.id, APIURL), {
       method: 'PUT',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -100,6 +103,7 @@ function updateFavorite(film) {
   return new Promise((resolve, reject) => {
     fetch(new URL('films/' + film.id + '/' + film.favorite, APIURL), {
       method: 'PUT',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       }
@@ -139,7 +143,7 @@ async function logOut() {
 }
 
 async function getUserInfo() {
-  const response = await fetch(new URL('sessions/current', APIURL), {credentials: 'include'});
+  const response = await fetch(new URL('sessions/current', APIURL), { credentials: 'include' });
   const userInfo = await response.json();
   if (response.ok) {
     return userInfo;

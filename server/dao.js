@@ -8,10 +8,10 @@ const db = new sqlite.Database('films.db', (err) => {
 });
 
 //get all films
-exports.listFilms = () => {
+exports.listFilms = (user) => {
     return new Promise((resolve, reject) => {
-        const sql = "SELECT * FROM FILMS";
-        db.all(sql, [], (err, rows) => {
+        const sql = "SELECT * FROM FILMS WHERE user=?";
+        db.all(sql, [user], (err, rows) => {
             if (err)
                 reject(err);
             else {
@@ -23,11 +23,10 @@ exports.listFilms = () => {
 }
 
 //get film by id
-exports.listFilmByID = (id) => {
+exports.listFilmByID = (id,user) => {
     return new Promise((resolve, reject) => {
-        const sql = "SELECT * FROM FILMS WHERE id = ?";
-        db.get(sql, [id], (err, row) => { 
-            console.log(id)
+        const sql = "SELECT * FROM FILMS WHERE id = ? AND user=?";
+        db.get(sql, [id, user], (err, row) => { 
             if (err)
                 reject(err);
 
@@ -44,10 +43,10 @@ exports.listFilmByID = (id) => {
 
 
 //get favorites
-exports.listFavorite = () => {
+exports.listFavorite = (user) => {
     return new Promise((resolve, reject) => {
-        const sql = "SELECT * FROM FILMS WHERE favorite = 1" ;
-        db.all(sql, [], (err, rows) => {
+        const sql = "SELECT * FROM FILMS WHERE favorite = 1 AND user=?" ;
+        db.all(sql, [user], (err, rows) => {
             if (err)
                 reject(err);
             else {
@@ -59,10 +58,10 @@ exports.listFavorite = () => {
 }
 
 //get bestRated
-exports.listBestRated = () => {
+exports.listBestRated = (user) => {
     return new Promise((resolve, reject) => {
-        const sql = "SELECT * FROM FILMS WHERE rating = 5" ;
-        db.all(sql, [], (err, rows) => {
+        const sql = "SELECT * FROM FILMS WHERE rating = 5 AND user=?" ;
+        db.all(sql, [user], (err, rows) => {
             if (err)
                 reject(err);
             else {
@@ -74,10 +73,10 @@ exports.listBestRated = () => {
 }
 
 //seenLastMonth
-exports.listSeenLastMonth = () => {
+exports.listSeenLastMonth = (user) => {
     return new Promise((resolve, reject) => {
-        const sql = "SELECT * FROM FILMS WHERE julianday(DATE('now'))- julianday(watchdate) < 30" ;
-        db.all(sql, [], (err, rows) => {
+        const sql = "SELECT * FROM FILMS WHERE julianday(DATE('now'))- julianday(watchdate) < 30 AND user=?" ;
+        db.all(sql, [user], (err, rows) => {
             if (err)
                 reject(err);
             else {
@@ -89,10 +88,10 @@ exports.listSeenLastMonth = () => {
 }
 
 //get unseen
-exports.listUnseen = () => {
+exports.listUnseen = (user) => {
     return new Promise((resolve, reject) => {
-        const sql = "SELECT * FROM FILMS WHERE watchdate is NULL" ;
-        db.all(sql, [], (err, rows) => {
+        const sql = "SELECT * FROM FILMS WHERE watchdate is NULL AND user=?" ;
+        db.all(sql, [user], (err, rows) => {
             if (err)
                 reject(err);
             else {
@@ -118,10 +117,10 @@ exports.addFilm = (film) => {
 }
 
 //update film
-exports.updateFilm = (film) => {
+exports.updateFilm = (film, user) => {
     return new Promise((resolve, reject) => {
-        const sql = "UPDATE films SET title=?, favorite=?, watchdate=?, rating=? WHERE id=?";
-        db.run(sql, [film.title, film.favorite, film.watchdate, film.rating, film.id], function (err) {
+        const sql = "UPDATE films SET title=?, favorite=?, watchdate=?, rating=? WHERE id=? AND user=?";
+        db.run(sql, [film.title, film.favorite, film.watchdate, film.rating, film.id, user], function (err) {
             if (err){ reject(err);
                 return;
 
@@ -132,11 +131,11 @@ exports.updateFilm = (film) => {
 }
 
 //update film mark
-exports.updateFilmFavorite = (id, favorite) => {
+exports.updateFilmFavorite = (id, favorite, user) => {
     
     return new Promise((resolve, reject) => {
-        const sql = "UPDATE films SET  favorite=? WHERE id=?";
-        db.run(sql, [ favorite, id], function (err) {
+        const sql = "UPDATE films SET  favorite=? WHERE id=? AND user=?";
+        db.run(sql, [ favorite, id, user], function (err) {
             if (err){ reject(err);
                 return;
 
@@ -147,10 +146,10 @@ exports.updateFilmFavorite = (id, favorite) => {
 }
 
 //delete film
-exports.deleteFilm = (id) => {
+exports.deleteFilm = (id, user) => {
     return new Promise((resolve, reject) => {
-        const sql = "DELETE FROM films WHERE id=?";
-        db.run(sql, [id], function (err) {
+        const sql = "DELETE FROM films WHERE id=? AND user=?";
+        db.run(sql, [id, user], function (err) {
             if (err) reject(err);
             else resolve(null);
         })
