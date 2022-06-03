@@ -92,6 +92,7 @@ function App2() {
     setLoggedIn(false);
     setUser({});
     setFilms([]);
+    navigate('/login');
   }
 
 
