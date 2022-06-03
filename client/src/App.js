@@ -31,7 +31,7 @@ function App() {
 function App2() {
   const [filter, setFilter] = useState('');
   const [films, setFilms] = useState([]);
-  const [dirty, setDirty] = useState(true);
+  const [dirty, setDirty] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);  // no user is logged in when app loads
   const [user, setUser] = useState({});
   const [message, setMessage] = useState('');
@@ -46,7 +46,6 @@ function App2() {
     const checkAuth = async () => {
       try {
         // here you have the user info, if already logged in
-        // TODO: store them somewhere and use them, if needed
         const user = await API.getUserInfo();
         setLoggedIn(true);
         setUser(user);
@@ -63,23 +62,16 @@ function App2() {
         .then((films) => { setFilms(films); setDirty(false); })
         .catch(err => handleError(err));
     }
-  }, [loggedIn])
+  }, [loggedIn, filter])
 
 
   useEffect(() => {
-    API.getFilmsByFilter(filter)
-      .then((films) => { setFilms(films) })
-      .catch(err => console.log(err));
-  }, [filter]);
-
-
-  useEffect(() => {
-    if (films.length && dirty) {
+    if (dirty) {
       API.getFilmsByFilter(filter)
         .then((films) => { setFilms(films); setDirty(false); })
         .catch(err => console.log(err));
     }
-  }, [films.length, dirty]);
+  }, [dirty]);
 
   const doLogIn = (credentials) => {
     API.logIn(credentials)
@@ -158,7 +150,9 @@ function App2() {
           <Route path='/edit/:filmId' element={<FilmFormWrapper films={films} addFilm={updateFilm} />}></Route>
           <Route path='/login' element={loggedIn ? <Navigate to='/' /> : <LoginForm login={doLogIn} />}> </Route>
           <Route path='*' element={<h1>Page not found</h1>}> </Route>
-          <Route path='/filter/:filter' element={<MainComponent films={films} filter={filter} deleteFilm={deleteFilm} setFilter={setFilter} updateFilm={updateFilm} updateFavorite={updateFilmFavorite} />}> </Route>
+          <Route path='/filter/:filter' element={loggedIn ?
+            <MainComponent films={films} filter={filter} deleteFilm={deleteFilm} setFilter={setFilter} updateFilm={updateFilm} updateFavorite={updateFilmFavorite} />
+            : <Navigate to='/login' />}> </Route>
         </Routes>
       </Container>
     </>
