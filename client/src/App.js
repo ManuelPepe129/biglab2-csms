@@ -65,13 +65,13 @@ function App2() {
     }
   }, [loggedIn])
 
-  /*
+
   useEffect(() => {
     API.getFilmsByFilter(filter)
       .then((films) => { setFilms(films) })
       .catch(err => console.log(err));
   }, [filter]);
-  */
+
 
   useEffect(() => {
     if (films.length && dirty) {
