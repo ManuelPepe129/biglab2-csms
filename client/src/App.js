@@ -100,14 +100,14 @@ function App2() {
     setFilms(oldFilms => [...oldFilms, film]);
     film.status = 'added';
     API.addFilm(film)
-      .then(() => setDirty(true))
+      .then(() => setTimeout(()=>setDirty(true),1000))
       .catch((err) => console.log(err));
   }
 
   function deleteFilm(filmId) {
     setFilms(f => f.map(fi => (fi.id === filmId) ? { ...fi, status: 'deleted' } : fi));
     API.deleteFilm(filmId)
-      .then(() => setDirty(true))
+      .then(() => setTimeout(()=>setDirty(true),1000))
       .catch(err => console.log(err));
   }
 
@@ -116,7 +116,7 @@ function App2() {
       f => (f.id === film.id) ? Object.assign({ status: 'edited' }, film) : f
     ));
     API.updateFilm(film)
-      .then(() => setDirty(true))
+      .then(() => setTimeout(()=>setDirty(true),1000))
       .catch(err => console.log(err));
   }
 
