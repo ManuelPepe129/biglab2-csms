@@ -90,6 +90,7 @@ function App2() {
   const doLogOut = async () => {
     await API.logOut();
     setLoggedIn(false);
+    setFilter('');
     setUser({});
     setFilms([]);
     navigate('/login');
