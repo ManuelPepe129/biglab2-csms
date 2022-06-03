@@ -51,7 +51,7 @@ function FilmForm(props) {
             setErrorMsg('Date can not be in a future day');
         } else {
             const id = props.filmToEdit ? props.filmToEdit.id : props.films.at(-1).id + 1;
-            const newDate = dateObject.isValid() ? watchdate : '';
+            const newDate = dateObject.isValid() ? watchdate : null;
             const newFilm = { id: id, title: title.trim(), favorite: favorite, watchdate: newDate, rating: rate }
             props.addFilm(newFilm);
             navigate('/');
@@ -74,7 +74,7 @@ function FilmForm(props) {
             <Form.Group className="mb-3">
                 <Form.Label>Whatch Date</Form.Label>
                 <Form.Control
-                    type="watchdate"
+                    type="date"
                     value={dayjs(watchdate).format('YYYY-MM-DD')}
                     onChange={ev => setDate(dayjs(ev.target.value))}
                 />
