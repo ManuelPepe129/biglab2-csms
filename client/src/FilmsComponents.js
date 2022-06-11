@@ -4,37 +4,36 @@ import { Sidebar } from './SidebarComponents';
 import './FilmsComponents.css';
 import { Trash, Pencil } from 'react-bootstrap-icons';
 import { useNavigate, useParams } from 'react-router-dom';
-
+import { useState, useEffect } from 'react';
 
 import dayjs from 'dayjs';
 
 import ReactStars from 'react-stars'
 
 function MainComponent(props) {
-  const { filter } = useParams();
 
   function renderTable() {
-    if (filter) {
-      switch (filter) {
+    if (props.filter) {
+      switch (props.filter) {
         case '':
         case 'All':
         case 'Favorites':
         case 'Best Rated':
         case 'Seen Last Month':
         case 'Unseen':
-          return <FilmTable films={props.films} filter={filter} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} />;
+          return <FilmTable films={props.films} filter={props.filter} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} updateFavorite={props.updateFavorite} />;
         default:
           return <h1>Filter not found</h1>;
       }
     } else {
-      return <FilmTable films={props.films} filter={filter} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} />;
+      return <FilmTable films={props.films} filter={props.filter} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} updateFavorite={props.updateFavorite} />;
     }
   }
 
   return (
     <Row>
       <Col xs={3} className={'sideBar'}>
-        <Sidebar />
+        <Sidebar setFilter={props.setFilter}/>
       </Col>
       <Col xs={8}>
         {renderTable()}
@@ -46,6 +45,15 @@ function MainComponent(props) {
 
 function FilmTable(props) {
 
+  /*
+  useEffect(() => {
+    API.getAllFilms()
+      .then((films) => { setFilms(films) })
+      .catch(err => console.log(err));
+  }, []);
+  */
+
+
   const navigate = useNavigate();
 
   return (
@@ -54,26 +62,7 @@ function FilmTable(props) {
       <Table>
         <tbody>
           {
-            props.films.filter(f => {
-              switch (props.filter) {
-                case 'Favorites':
-                  return f.isFavourite;
-                case 'Best Rated':
-                  return f.rating === 5;
-                case 'Seen Last Month':
-                  const d = dayjs(f.date);
-                  if (d.isValid()) {
-                    return d.isAfter(dayjs().subtract(30, 'day'));
-                  } else {
-                    return false;
-                  }
-                case 'Unseen':
-                  return !dayjs(f.date).isValid();
-
-                default:
-                  return true;
-              }
-            }).map((film) => <FilmRow film={film} key={film.id} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} />)
+            props.films.map((film) => <FilmRow film={film} key={film.id} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} updateFavorite={props.updateFavorite} />)
           }
         </tbody>
       </Table>
@@ -83,9 +72,27 @@ function FilmTable(props) {
 }
 
 function FilmRow(props) {
+  let statusClass = null;
+
+  switch (props.film.status) {
+    case 'added':
+      statusClass = 'table-success';
+      break;
+
+    case 'edited':
+      statusClass = 'table-warning';
+      break;
+
+    case 'deleted':
+      statusClass = 'table-danger';
+      break;
+    default:
+      break;
+  }
+  
   return (
-    <tr>
-      <FilmData film={props.film} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} />
+    <tr className={statusClass}>
+      <FilmData film={props.film} deleteFilm={props.deleteFilm} updateFilm={props.updateFilm} updateFavorite={props.updateFavorite} />
     </tr>
   )
 }
@@ -94,30 +101,30 @@ function FilmData(props) {
   const navigate = useNavigate();
 
   const ratingChanged = (newRating) => {
-    const newFilm = { id: props.film.id, title: props.film.title, isFavourite: props.film.isFavourite, date: props.film.date, rating: newRating };
+    const newFilm = { id: props.film.id, title: props.film.title, favorite: props.film.favorite, watchdate: props.film.watchdate, rating: newRating };
     props.updateFilm(newFilm);
   }
 
   const toggleFavourite = (event) => {
-    const newFilm = { id: props.film.id, title: props.film.title, isFavourite: event.target.checked, date: props.film.date, rating: props.film.rating };
-    props.updateFilm(newFilm);
+    const newFilm = { id: props.film.id, title: props.film.title, favorite: event.target.checked, watchdate: props.film.watchdate, rating: props.film.rating };
+    props.updateFavorite(newFilm);
   }
 
   return (
     <>
-      <td className={`favorite text-start col-4 ${(props.film.isFavourite) ? "red" : false}`}>
+      <td className={`favorite text-start col-4 ${(props.film.favorite) ? "red" : false}`}>
         {props.film.title}
       </td>
       <td>
         <Form.Group controlId="formBasicCheckbox">
-          <Form.Check inline type="checkbox" label="Favorite" defaultChecked={props.film.isFavourite}
+          <Form.Check inline type="checkbox" label="Favorite" defaultChecked={props.film.favorite}
             onChange={(event) => {
               toggleFavourite(event);
             }} />
         </Form.Group>
       </td>
       <td>
-        {(dayjs(props.film.date).isValid()) ? dayjs(props.film.date).format('YYYY-MM-DD') : ""}
+        {(dayjs(props.film.watchdate).isValid()) ? dayjs(props.film.watchdate).format('YYYY-MM-DD') : ""}
       </td>
       <td>
         <ReactStars

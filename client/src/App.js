@@ -1,12 +1,13 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
-import { Container } from 'react-bootstrap';
+import { Container, Col, Alert, Row } from 'react-bootstrap';
 import { MyNavbar } from './NavbarComponents';
 import { MainComponent } from './FilmsComponents';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useParams, BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { FilmFormWrapper } from './FilmForm';
+import { LoginForm, LogoutButton } from './LoginComponents';
+import { useState, useEffect } from 'react';
 import API from './API';
 
 /*
@@ -20,41 +21,142 @@ const filmList = [
 */
 
 function App() {
+  return (
+    <Router>
+      <App2 />
+    </Router>
+  )
+}
+
+function App2() {
+  const [filter, setFilter] = useState('');
   const [films, setFilms] = useState([]);
+  const [dirty, setDirty] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);  // no user is logged in when app loads
+  const [user, setUser] = useState({});
+  const [message, setMessage] = useState('');
+
+  const navigate = useNavigate();
+
+  function handleError(err) {
+    console.log(err);
+  }
 
   useEffect(() => {
-    API.getAllFilms()
-      .then((films) => { setFilms(films) })
-      .catch(err => console.log(err));
+    const checkAuth = async () => {
+      try {
+        // here you have the user info, if already logged in
+        const user = await API.getUserInfo();
+        setLoggedIn(true);
+        setUser(user);
+      } catch (err) {
+        handleError(err);
+      }
+    };
+    checkAuth();
   }, []);
+
+  useEffect(() => {
+    if (loggedIn) {
+      API.getFilmsByFilter(filter)
+        .then((films) => { setFilms(films); setDirty(false); })
+        .catch(err => handleError(err));
+    }
+  }, [loggedIn, filter])
+
+
+  useEffect(() => {
+    if (dirty) {
+      API.getFilmsByFilter(filter)
+        .then((films) => { setFilms(films); setDirty(false); })
+        .catch(err => console.log(err));
+    }
+  }, [dirty]);
+
+  const doLogIn = (credentials) => {
+    API.logIn(credentials)
+      .then(user => {
+        setLoggedIn(true);
+        setUser(user);
+        setMessage('');
+        navigate('/');
+      })
+      .catch(err => {
+        setMessage(err);
+      }
+      )
+  }
+
+  const doLogOut = async () => {
+    await API.logOut();
+    setLoggedIn(false);
+    setFilter('');
+    setUser({});
+    setFilms([]);
+    navigate('/login');
+  }
+
+
+  function addFilm(film) {
+    setFilms(oldFilms => [...oldFilms, film]);
+    film.status = 'added';
+    API.addFilm(film)
+      .then(() => setTimeout(()=>setDirty(true),1000))
+      .catch((err) => console.log(err));
+  }
+
+  function deleteFilm(filmId) {
+    setFilms(f => f.map(fi => (fi.id === filmId) ? { ...fi, status: 'deleted' } : fi));
+    API.deleteFilm(filmId)
+      .then(() => setTimeout(()=>setDirty(true),1000))
+      .catch(err => console.log(err));
+  }
 
   function updateFilm(film) {
     setFilms(films => films.map(
-      f => (f.id === film.id) ? Object.assign({}, film) : f
+      f => (f.id === film.id) ? Object.assign({ status: 'edited' }, film) : f
     ));
+    API.updateFilm(film)
+      .then(() => setTimeout(()=>setDirty(true),1000))
+      .catch(err => console.log(err));
   }
 
-  function deleteFilm(id) {
-    setFilms(films.filter(f => f.id !== id));
+  function updateFilmFavorite(film) {
+    setFilms(films => films.map(
+      f => (f.id === film.id) ? Object.assign({ status: 'edited' }, film) : f
+    ));
+    API.updateFavorite(film)
+      .then(() => setDirty(true))
+      .catch(err => console.log(err));
   }
-  function addFilm(newFilm) {
-    setFilms(oldFilms => [...oldFilms, newFilm]);
-  }
+
   return (
     <>
       <MyNavbar></MyNavbar>
-      <Container fluid className="mh-100">
-        <Router>
-          <Routes>
-            <Route path='/' element={<MainComponent films={films} deleteFilm={deleteFilm} updateFilm={updateFilm} />}></Route>
-            <Route path='/add' element={<FilmFormWrapper addFilm={addFilm} films={films} />}></Route>
-            <Route path='/edit/:filmId' element={<FilmFormWrapper addFilm={updateFilm} films={films} />}></Route>
-            <Route path='*' element={<h1>Page not found</h1>}> </Route>
-            <Route path='/filter/:filter' element={<MainComponent films={films} deleteFilm={deleteFilm} updateFilm={updateFilm} />}> </Route>
-          </Routes>
-        </Router>
+      <Container>
+        <Row><Col>
+          {loggedIn ? <LogoutButton logout={doLogOut} user={user} /> : false}
+        </Col></Row>
+        <Row><Col>
+          {message ? <Alert variant='danger' onClose={() => setMessage('')} dismissible>{message}</Alert> : false}
+        </Col></Row>
       </Container>
-
+      <Container fluid className="mh-100">
+        <Routes>
+          <Route path='/' element=
+            {loggedIn ?
+              <MainComponent films={films} filter={filter} deleteFilm={deleteFilm} setFilter={setFilter} updateFilm={updateFilm} updateFavorite={updateFilmFavorite} />
+              : <Navigate to={'/login'} />
+            } ></Route>
+          <Route path='/add' element={<FilmFormWrapper films={films} addFilm={addFilm} />}></Route>
+          <Route path='/edit/:filmId' element={<FilmFormWrapper films={films} addFilm={updateFilm} />}></Route>
+          <Route path='/login' element={loggedIn ? <Navigate to='/' /> : <LoginForm login={doLogIn} updateMessage={setMessage}/>}> </Route>
+          <Route path='*' element={<h1>Page not found</h1>}> </Route>
+          <Route path='/filter/:filter' element={loggedIn ?
+            <MainComponent films={films} filter={filter} deleteFilm={deleteFilm} setFilter={setFilter} updateFilm={updateFilm} updateFavorite={updateFilmFavorite} />
+            : <Navigate to='/login' />}> </Route>
+        </Routes>
+      </Container>
     </>
   );
 }

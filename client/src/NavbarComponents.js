@@ -17,8 +17,8 @@ function MyNavbar(props) {
               className="me-2"
               aria-label="Search"
             />
-            <td><Button className='rounded-circle' variant='light'
-            ><Search></Search></Button></td>
+            <Button className='rounded-circle' variant='light'
+            ><Search></Search></Button>
           </Form>
         </Navbar.Collapse>
         <Navbar.Brand><PersonCircle width="25" height="25" fill="currentColor" /></Navbar.Brand>
