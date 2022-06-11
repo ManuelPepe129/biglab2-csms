@@ -150,7 +150,7 @@ function App2() {
             } ></Route>
           <Route path='/add' element={<FilmFormWrapper films={films} addFilm={addFilm} />}></Route>
           <Route path='/edit/:filmId' element={<FilmFormWrapper films={films} addFilm={updateFilm} />}></Route>
-          <Route path='/login' element={loggedIn ? <Navigate to='/' /> : <LoginForm login={doLogIn} />}> </Route>
+          <Route path='/login' element={loggedIn ? <Navigate to='/' /> : <LoginForm login={doLogIn} updateMessage={setMessage}/>}> </Route>
           <Route path='*' element={<h1>Page not found</h1>}> </Route>
           <Route path='/filter/:filter' element={loggedIn ?
             <MainComponent films={films} filter={filter} deleteFilm={deleteFilm} setFilter={setFilter} updateFilm={updateFilm} updateFavorite={updateFilmFavorite} />

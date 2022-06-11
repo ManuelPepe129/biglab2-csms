@@ -4,13 +4,14 @@ import { useState } from 'react';
 function LoginForm(props) {
   const [username, setUsername] = useState('testuser@polito.it');
   const [password, setPassword] = useState('password');
-  const [errorMessage, setErrorMessage] = useState('');
 
   const [validated, setValidated] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     event.stopPropagation();
+
+    props.updateMessage("");
 
     const credentials = { username, password };
 
@@ -20,7 +21,7 @@ function LoginForm(props) {
       setValidated(true);
     }
     else if (username === '' || password === '') {
-      props.setMessage("Email and password cannot be empty ")
+      props.updateMessage("Email and password cannot be empty ");
       setValidated(false);
     }
     else {
@@ -34,7 +35,6 @@ function LoginForm(props) {
         <Col>
           <h2>Login</h2>
           <Form noValidate validated={validated} onSubmit={handleSubmit} >
-            {errorMessage ? <Alert variant='danger'>{errorMessage}</Alert> : ''}
             <Form.Group controlId='username'>
               <Form.Label>email</Form.Label>
               <Form.Control
