@@ -47,9 +47,13 @@ Provide a short description of the API you designed, with the required parameter
 
 ### __Login__
 
-- POST `/api/sessions`
-  - Description: authenticate the user who is trying to login
-  - Request body: credentials of the user who is trying to login
+URL: `/api/sessions`
+
+HTTP Method: POST
+
+Description: authenticate the user who is trying to login
+
+Request body: credentials of the user who is trying to login
 
   ```
   {
@@ -57,20 +61,19 @@ Provide a short description of the API you designed, with the required parameter
       "password": "password"
   }
   ```
-  - Response: 200 OK (success)
-  - Response body: authenticated user
-
-  ```
-- Error responses: 401 Unauthorized User (login failed), 422 Unprocessable Entity (values do not satisfy validators).
+Response: `200 OK` (success) `401` Unauthorized User (login failed), `422` Unprocessable Entity (values do not satisfy validators).
 
 
 
 
-- GET `api/sessions/current`
- - Description: check if the current user is logged in and get her data
- - Request body: None
- - Response: 200 OK (success)
- - Response body: authenticated user
+URL: `api/sessions/current`
+
+HTTP Method: POST
+
+ Description: check if the current user is logged in and get her data
+
+Request body: None
+
   ```
     {
         "id": 2,
@@ -78,7 +81,27 @@ Provide a short description of the API you designed, with the required parameter
         "name": "Test"
     }
   ```
-  - Error responses: 401 Unauthorized User (user is not logged in)
+
+
+ Response: `200` OK (success)
+
+ Response body: authenticated user
+
+Error responses: `401` Unauthorized User (user is not logged in)
+
+URL: `api/sessions/current`
+
+HTTP Method: DELETE
+
+Description: logout current user
+
+Request body: None
+  
+Response: `200` OK (success)
+
+Response body: None
+ 
+Error responses:  `401` Unauthorized User (user is not logged in)
 
 ### __List films__
 
