@@ -299,3 +299,26 @@ Response: `201 OK` (success) `503` (internal server error) `422` (not found)
 
 Response body: _None_ 
 
+### __Login__
+
+URL: `/sessions`
+
+HTTP Method: POST
+
+Description: Login
+
+Request body:
+
+```
+{
+"title": "Avatar 2",
+"favorite": 0,
+"watchdate": null,
+"rating": null,
+"user": 0
+}
+```
+
+Response: `201 OK` (success) `401` (Wrong login)
+
+Response body: _None_ 
