@@ -175,9 +175,9 @@ app.delete('/api/films/:id', isLoggedIn, async (request, response) => {
 
 //ADD /api/films
 app.post('/api/films', isLoggedIn, [
-    //check('favorite').isInt({ min: 0, max: 1 }),
-    //check('rating').isInt({ min: 0, max: 5 }),
-    //check('watchdate').isBefore(dayjs().format('YYYY-MM-DD')),
+    check('favorite').isInt({ min: 0, max: 1 }),
+    check('rating').isInt({ min: 0, max: 5 }),
+    check('watchdate').isBefore(dayjs().format('YYYY-MM-DD')),
 ], async (request, response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
