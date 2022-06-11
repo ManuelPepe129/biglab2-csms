@@ -45,6 +45,41 @@ Provide a short description of the API you designed, with the required parameter
 * [A (small) sample response, with body (if any)]
 * [Error responses, if any]
 
+### __Login__
+
+- POST `/api/sessions`
+  - Description: authenticate the user who is trying to login
+  - Request body: credentials of the user who is trying to login
+
+  ```
+  {
+      "username": "testuser@polito.it",
+      "password": "password"
+  }
+  ```
+  - Response: 200 OK (success)
+  - Response body: authenticated user
+
+  ```
+- Error responses: 401 Unauthorized User (login failed), 422 Unprocessable Entity (values do not satisfy validators).
+
+
+
+
+- GET `api/sessions/current`
+ - Description: check if the current user is logged in and get her data
+ - Request body: None
+ - Response: 200 OK (success)
+ - Response body: authenticated user
+  ```
+    {
+        "id": 2,
+        "username": "testuser@polito.it", 
+        "name": "Test"
+    }
+  ```
+  - Error responses: 401 Unauthorized User (user is not logged in)
+
 ### __List films__
 
 URL: `/films`
@@ -299,26 +334,3 @@ Response: `201 OK` (success) `503` (internal server error) `422` (not found)
 
 Response body: _None_ 
 
-### __Login__
-
-URL: `/sessions`
-
-HTTP Method: POST
-
-Description: Login
-
-Request body:
-
-```
-{
-"title": "Avatar 2",
-"favorite": 0,
-"watchdate": null,
-"rating": null,
-"user": 0
-}
-```
-
-Response: `201 OK` (success) `401` (Wrong login)
-
-Response body: _None_ 
