@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 const APIURL = new URL('http://localhost:3001/api/');  // Do not forget '/' at the end
 
 async function getAllFilms() {
-  // call: GET /api/courses
+  // call: GET /api/films
   const response = await fetch(new URL('films', APIURL), { credentials: 'include' });
   const filmsJson = await response.json();
   if (response.ok) {

@@ -33,10 +33,11 @@ If you decide to add additional users, please remember to add them to this table
 |-------|----------|------|
 | john.doe@polito.it | password | John |
 | mario.rossi@polito.it | password | Mario |
+| testuser@polito.it | password | Test |
 
 ## List of APIs offered by the server
 
-Provide a short description of the API you designed, with the required parameters. Please follow the proposed structure.
+Provide a short description of the API you designed, with the required parameters. Please follow the proposed structure.*-
 
 * [HTTP Method] [URL, with any parameter]
 * [One-line about what this API is doing]
@@ -75,11 +76,11 @@ Response body:
 
 ### __Get a film (by id)__
 
-URL: `/films/film`
+URL: `/films/:id`
 
 HTTP Method: GET
 
-Description: Get a film by code
+Description: Get a film by user
 
 Request body: _None_
 
@@ -104,7 +105,7 @@ URL: `/api/favorites`
 
 HTTP Method: GET
 
-Description: Get all the favorite films
+Description: Get all the favorite films by user
 
 Request body: _None_
 
@@ -141,7 +142,7 @@ URL: `/bestRated`
 
 HTTP Method: GET
 
-Description: Get all the best rated films
+Description: Get all the best rated films by user
 
 Request body: _None_
 
@@ -170,7 +171,7 @@ URL: `/seenLastMonth`
 
 HTTP Method: GET
 
-Description: Get all the films seen last month
+Description: Get all the films seen last month by user
 
 Request body: _None_
 
@@ -193,13 +194,13 @@ Response body:
 }]
 ```
 
-### __Get unseen filmsh__
+### __Get unseen films__
 
 URL: `/seenLastMonth`
 
 HTTP Method: GET
 
-Description: Get all the unseen films
+Description: Get all the unseen films by user
 
 Request body: _None_
 
@@ -224,7 +225,7 @@ Response body:
 
 ### __Delete a film__
 
-URL: `/films/<id>`
+URL: `/films/:id`
 
 HTTP Method: DELETE
 
@@ -238,13 +239,13 @@ Response body: _None_
 
 ### __Update a film__
 
-URL: `/films/<id>`
+URL: `/films/:id`
 
 HTTP Method: PUT
 
 Description: Update a film from the collection films with the given id
 
-Request body:
+Request body: 
 
 ```
 {
@@ -262,25 +263,25 @@ Response body: _None_
 
 ### __Update favorite attribute of a film__
 
-URL: `/films/<id>/<favorite>`
+URL: `/films/:id/:favorite`
 
 HTTP Method: PUT
 
-Description: Update favorite attribute of a filmfrom the collection films with the given id
+Description: Update favorite attribute of a film from the collection films with the given id
 
 Request body: ```None ```
 
-Response: `200 OK` (success) `503` (internal server error) `404` (not found)
+Response: `200 OK` (success) `503` (internal server error) `404` (not found) `422` (validation error)
 
 Response body: _None_ 
 
 ### __Add a film__
 
-URL: `/films/<film>`
+URL: `/films`
 
 HTTP Method: POST
 
-Description: Adds a film to the collection films
+Description: Adds a film to the collection films of a user
 
 Request body:
 
