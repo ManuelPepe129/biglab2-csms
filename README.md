@@ -76,7 +76,7 @@ Request body: None
 
   ```
     {
-        "id": 2,
+        "id": 3,
         "username": "testuser@polito.it", 
         "name": "Test"
     }
