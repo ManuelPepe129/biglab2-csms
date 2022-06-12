@@ -315,7 +315,7 @@ Request body:
 }
 ```
 
-Response: `200 OK` (success) `503` (internal server error) `422` (not found)
+Response: `200 OK` (success) `503` (internal server error) `422` (validation error)
 
 Response body: _None_ 
 
@@ -353,7 +353,7 @@ Request body:
 }
 ```
 
-Response: `201 OK` (success) `503` (internal server error) `422` (not found)
+Response: `201 OK` (success) `503` (internal server error) `422` (validation error)
 
 Response body: _None_ 
 

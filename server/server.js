@@ -161,8 +161,6 @@ app.get('/api/unseen', isLoggedIn, async (request, response) => {
     }
 });
 
-
-
 //DELETE /api/films/:id
 app.delete('/api/films/:id', isLoggedIn, async (request, response) => {
     try {
@@ -177,7 +175,7 @@ app.delete('/api/films/:id', isLoggedIn, async (request, response) => {
 app.post('/api/films', isLoggedIn, [
     check('favorite').isInt({ min: 0, max: 1 }),
     check('rating').isInt({ min: 0, max: 5 }),
-    check('watchdate').isBefore(dayjs().format('YYYY-MM-DD')),
+    check('watchdate').isBefore(dayjs().format('YYYY-MM-DD')).optional({ nullable: true }),
 ], async (request, response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
@@ -201,21 +199,11 @@ app.post('/api/films', isLoggedIn, [
     }
 });
 
-/*
-
-REQBIN TEST:
-
- {"title":"changed",
- "favorite":"1",
- "watchdate":"2022-03-20",
- "rating":"4"
-} */
-
 //UPDATE /api/films/:id
 app.put('/api/films/:id', isLoggedIn, [
-    // check('favorite').isInt({ min: 0, max: 1 }),
-    //check('rating').isInt({ min: 0, max: 5 }),
-    // check('watchdate').isBefore(dayjs().format('YYYY-MM-DD')),
+    check('favorite').isInt({ min: 0, max: 1 }),
+    check('rating').isInt({ min: 0, max: 5 }),
+    check('watchdate').isBefore(dayjs().format('YYYY-MM-DD')).optional({ nullable: true }),
 ], async (request, response) => {
 
     const errors = validationResult(request);
@@ -231,8 +219,6 @@ app.put('/api/films/:id', isLoggedIn, [
         rating: request.body.rating,
     };
 
-
-
     try {
         await dao.updateFilm(film, request.user.id);
         response.status(200).end();
@@ -244,7 +230,7 @@ app.put('/api/films/:id', isLoggedIn, [
 
 //UPDATEFILMFAVORITE /api/films/:id/:favorite
 app.put('/api/films/:id/:favorite', isLoggedIn, [
-    // check('favorite').isInt({ min: 0, max: 1 })
+    check('favorite').isInt({ min: 0, max: 1 })
 ], async (request, response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
